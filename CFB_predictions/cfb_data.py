@@ -8,20 +8,22 @@ import pandas as pd
 from datetime import datetime
 from cfbd.models.adjusted_team_metrics import AdjustedTeamMetrics
 from pprint import pprint
-
+from pathlib import Path
 
 CURR_YEAR = datetime.now().year
 
 def config():
-    load_dotenv('/app/.env')
-    api_key = os.getenv("CFD_API_KEY")
-    if not api_key:
-        raise ValueError("No API key found. Make sure CFD_API_KEY is in your .env file")
+    env_path = Path(__file__).parent / ".env"
+    load_dotenv(dotenv_path=env_path)
+
+    api_key = os.getenv("CFBD_API_KEY")
 
     configuration = cfbd.Configuration(
-        host="https://api.collegefootballdata.com",
-        access_token = api_key
+        host="https://api.collegefootballdata.com"
     )
+
+    configuration.api_key["Authorization"] = api_key.strip()
+    configuration.api_key_prefix["Authorization"] = "Bearer"
 
     return configuration
 
@@ -29,10 +31,6 @@ if __name__ == "__main__":
     configuration = config()
 
     with cfbd.ApiClient(configuration) as api_client:
-        api_instance = cfbd.AdjustedMetricsApi(api_client)
-
-        team = 'Baylor'
-        conference = "Big 12"
-
-        api_response = api_instance.get_adjusted_team_season_stats(year = CURR_YEAR, team = team, conference = conference)
-        pprint(api_response)
+        games_api = cfbd.GamesApi(api_client)
+        games = games_api.get_games(year=2024, team="Baylor")
+        print(games[:1])
