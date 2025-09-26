@@ -1,13 +1,8 @@
-import time
 import cfbd
-from cfbd.rest import ApiException
-from pprint import pprint
 import os
 from dotenv import load_dotenv
 import pandas as pd
 from datetime import datetime
-from cfbd.models.adjusted_team_metrics import AdjustedTeamMetrics
-from pprint import pprint
 from pathlib import Path
 
 CURR_YEAR = datetime.now().year
