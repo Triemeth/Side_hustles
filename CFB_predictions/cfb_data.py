@@ -22,15 +22,22 @@ def config():
         host="https://api.collegefootballdata.com"
     )
 
-    configuration.api_key["Authorization"] = api_key.strip()
-    configuration.api_key_prefix["Authorization"] = "Bearer"
+    configuration.api_key = {}
+    configuration.api_key_prefix = {}
+
+    configuration.api_key["authorization"] = api_key
+    configuration.api_key_prefix["authorization"] = "Bearer"
 
     return configuration
+
+
 
 if __name__ == "__main__":
     configuration = config()
 
     with cfbd.ApiClient(configuration) as api_client:
+        api_client.default_headers["Authorization"] = f"Bearer {configuration.api_key['authorization']}"
+
         games_api = cfbd.GamesApi(api_client)
         games = games_api.get_games(year=2024, team="Baylor")
         print(games[:1])
