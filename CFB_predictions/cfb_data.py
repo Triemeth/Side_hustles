@@ -30,8 +30,6 @@ def config():
 
     return configuration
 
-
-
 if __name__ == "__main__":
     configuration = config()
 
