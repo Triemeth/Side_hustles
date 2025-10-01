@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import pandas as pd
 from datetime import datetime
 from pathlib import Path
+from pprint import pprint
 
 CURR_YEAR = datetime.now().year
 
@@ -31,6 +32,24 @@ if __name__ == "__main__":
     with cfbd.ApiClient(configuration) as api_client:
         api_client.default_headers["Authorization"] = f"Bearer {configuration.api_key['authorization']}"
 
-        games_api = cfbd.GamesApi(api_client)
-        games = games_api.get_games(year=2024, team="Baylor")
-        print(games[:1])
+        year = CURR_YEAR
+        team = "Baylor"
+
+        api_instance = cfbd.StatsApi(api_client)
+
+        game_stats = api_instance.get_team_stats(year = year, team = team)
+
+        data = []
+        for stat in game_stats:
+            data.append({
+                "team": stat.team,
+                "stat_name": stat.stat_name,
+                "value": stat.stat_value.actual_instance
+            })
+
+        df = pd.DataFrame(data)
+
+        df_wide = df.pivot(index="team", columns="stat_name", values="value").reset_index()
+        print(df_wide.head())
+
+     
