@@ -26,7 +26,7 @@ def config():
 
     return configuration
 
-def season_team_stats( api_client):
+def season_team_stats(api_client, team):
     api_instance = cfbd.StatsApi(api_client)
 
     game_stats = api_instance.get_team_stats(year = year, team = team)
@@ -51,14 +51,29 @@ if __name__ == "__main__":
     with cfbd.ApiClient(configuration) as api_client:
         api_client.default_headers["Authorization"] = f"Bearer {configuration.api_key['authorization']}"
 
-        year = CURR_YEAR
-        team = "Baylor"
+        api_instance = cfbd.GamesApi(api_client)
+        games = api_instance.get_game_team_stats(year = CURR_YEAR, week = 1)
+        parsed_games = []
 
-        #need to do rolling averages as well and homeverse away formula
+        for g in games:
+            g_dict = g.to_dict()
+            for t in g_dict["teams"]:
+                base = {
+                    "gameId": g_dict.get("id"),
+                    "team": t.get("team"),
+                    "teamId": t.get("team_id"),
+                    "conference": t.get("conference"),
+                    "homeAway": t.get("home_away"),
+                    "points": t.get("points")
+                }
+
+                stats_dict = {s["category"]: s["stat"] for s in t.get("stats", [])}
+
+                parsed_games.append({**base, **stats_dict})
+
+        df = pd.DataFrame(parsed_games)
+        df.to_csv("../CFB_predictions/check_dat.csv", index=False)
 
         
-        
-        # will need to later loop through all fbs teams and append to a main dataframe
-        #df_team = season_team_stats(api_client)
 
 
