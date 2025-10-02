@@ -26,6 +26,25 @@ def config():
 
     return configuration
 
+def season_team_stats( api_client):
+    api_instance = cfbd.StatsApi(api_client)
+
+    game_stats = api_instance.get_team_stats(year = year, team = team)
+
+    data = []
+    for stat in game_stats:
+        data.append({
+            "team": stat.team,
+            "stat_name": stat.stat_name,
+            "value": stat.stat_value.actual_instance
+        })
+
+    df = pd.DataFrame(data)
+    df = df.pivot(index="team", columns="stat_name", values="value").reset_index()
+
+    return df
+
+
 if __name__ == "__main__":
     configuration = config()
 
@@ -35,21 +54,11 @@ if __name__ == "__main__":
         year = CURR_YEAR
         team = "Baylor"
 
-        api_instance = cfbd.StatsApi(api_client)
+        #need to do rolling averages as well and homeverse away formula
 
-        game_stats = api_instance.get_team_stats(year = year, team = team)
+        
+        
+        # will need to later loop through all fbs teams and append to a main dataframe
+        #df_team = season_team_stats(api_client)
 
-        data = []
-        for stat in game_stats:
-            data.append({
-                "team": stat.team,
-                "stat_name": stat.stat_name,
-                "value": stat.stat_value.actual_instance
-            })
 
-        df = pd.DataFrame(data)
-
-        df_wide = df.pivot(index="team", columns="stat_name", values="value").reset_index()
-        print(df_wide.head())
-
-     
