@@ -26,7 +26,9 @@ def config():
 
     return configuration
 
-def season_team_stats(api_client, team):
+
+#get team seasons stats up to upcoming games
+def season_team_stats(api_client, team, year = CURR_YEAR):
     api_instance = cfbd.StatsApi(api_client)
 
     game_stats = api_instance.get_team_stats(year = year, team = team)
@@ -44,36 +46,49 @@ def season_team_stats(api_client, team):
 
     return df
 
+#get game stats mainly for rolling averages and home and away stuff
 
+
+
+#data output is monthly for some values due to excel transforming stuff like 11-40 to nov-40 or something need to regex to fix this or turn to precentage
 if __name__ == "__main__":
     configuration = config()
 
     with cfbd.ApiClient(configuration) as api_client:
         api_client.default_headers["Authorization"] = f"Bearer {configuration.api_key['authorization']}"
-
         api_instance = cfbd.GamesApi(api_client)
-        games = api_instance.get_game_team_stats(year = CURR_YEAR, week = 1)
+
+        games = api_instance.get_game_team_stats(year=CURR_YEAR, week=1)
         parsed_games = []
 
         for g in games:
             g_dict = g.to_dict()
-            for t in g_dict["teams"]:
+            for t in g_dict.get("teams", []):
                 base = {
                     "gameId": g_dict.get("id"),
                     "team": t.get("team"),
                     "teamId": t.get("team_id"),
                     "conference": t.get("conference"),
                     "homeAway": t.get("home_away"),
-                    "points": t.get("points")
+                    "points": t.get("points"),
                 }
 
-                stats_dict = {s["category"]: s["stat"] for s in t.get("stats", [])}
+                stats_dict = {}
+                for s in t.get("stats", []):
+                    cat = s.get("category")
+                    val = s.get("stat")
+                    try:
+                        val = float(val)
+                    except (TypeError, ValueError):
+                        pass
+                    stats_dict[cat] = val
 
                 parsed_games.append({**base, **stats_dict})
 
         df = pd.DataFrame(parsed_games)
-        df.to_csv("../CFB_predictions/check_dat.csv", index=False)
+        df = df.reindex(sorted(df.columns), axis=1)
 
-        
+        print(df.head(10))
 
-
+        # df.to_csv("../CFB_predictions/check_dat.csv", index=False, encoding="utf-8")
+        # print(f"Wrote {len(df)} rows to check_dat.csv")
