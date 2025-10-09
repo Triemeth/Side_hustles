@@ -51,6 +51,7 @@ def season_team_stats(api_client, team, year = CURR_YEAR):
 
 
 #data output is monthly for some values due to excel transforming stuff like 11-40 to nov-40 or something need to regex to fix this or turn to precentage
+#could do SQL lowkey but not worth having some of the odd values as strings tbh
 if __name__ == "__main__":
     configuration = config()
 
