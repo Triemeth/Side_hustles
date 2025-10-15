@@ -33,12 +33,8 @@ def label_encoder(df, col_name):
 
     return df
 
-#need to fix home and away
-#get team seasons stats up to upcoming games will have to loop through
-def season_team_stats(api_client, team, year = CURR_YEAR):
-    api_instance = cfbd.StatsApi(api_client)
-
-    game_stats = api_instance.get_team_stats(year = year, team = team)
+def season_team_stats(api_instance, year = CURR_YEAR):
+    game_stats = api_instance.get_team_stats(year = year)
 
     data = []
     for stat in game_stats:
@@ -65,23 +61,23 @@ def turn_dash_precentage(df, col_list):
 
     return df
 
-#get game stats mainly for rolling averages and home and away stuff
 def team_stats_by_game(api_instance, year=CURR_YEAR, week = 1):
 
-    keep_conf = ["American Athletic", "ACC", 
-                     "Big 12", "Big Ten", 
-                     "Conference USA", "FBS Independents", 
-                     "Mid-American", "Mountain West",
-                     "Pac-12", "SEC", "Sun Belt"]
-
     games = api_instance.get_game_team_stats(year = year, week = week)
+    games_info = api_instance_games.get_games(year=year, week=week)
+    game_dates = {g.id: g.start_date for g in games_info}
+
     parsed_games = []
 
     for g in games:
         g_dict = g.to_dict()
+        game_id = g_dict.get("id")
+        game_date = game_dates.get(game_id)
+
         for t in g_dict.get("teams", []):
             base = {
-                "gameId": g_dict.get("id"),
+                "gameId": game_id,
+                "date": game_date,
                 "team": t.get("team"),
                 "teamId": t.get("team_id"),
                 "conference": t.get("conference"),
@@ -104,28 +100,43 @@ def team_stats_by_game(api_instance, year=CURR_YEAR, week = 1):
     df = pd.DataFrame(parsed_games)
     df = df.reindex(sorted(df.columns), axis=1)
 
-    df = df[df["conference"].isin(keep_conf)]
+    return df
 
+def get_latest_ap_poll(api_instance, year = CURR_YEAR):
+    rankings = api_instance.get_rankings(year=year)
+
+    latest = max(rankings, key=lambda x: x.week)
+    ap_poll = next((poll for poll in latest.polls if poll.poll == "AP Top 25"), None)
+
+    if not ap_poll:
+        return pd.DataFrame(columns=["team", "ap_rank"])
+
+    data = []
+    for team in ap_poll.ranks:
+        data.append({
+            "team": team.school,
+            "conference": team.conference,
+            "ap_rank": team.rank
+        })
+
+    df = pd.DataFrame(data)
     return df
 
 
-#data output is monthly for some values due to excel transforming stuff like 11-40 to nov-40 or something need to regex to fix this or turn to precentage
-#could do SQL lowkey but not worth having some of the odd values as strings tbh
 if __name__ == "__main__":
     configuration = config()
 
     with cfbd.ApiClient(configuration) as api_client:
         api_client.default_headers["Authorization"] = f"Bearer {configuration.api_key['authorization']}"
-        api_instance = cfbd.GamesApi(api_client)
+        api_instance_games = cfbd.GamesApi(api_client)
+        api_instance_season = cfbd.StatsApi(api_client)
+        api_instance_rankings = cfbd.RankingsApi(api_client)
 
         team_game = pd.DataFrame()
 
         for i in range(1,7):
-            hold = team_stats_by_game(api_instance, CURR_YEAR, i)
+            hold = team_stats_by_game(api_instance_games, CURR_YEAR, i)
             team_game = pd.concat([team_game, hold], ignore_index=True)
-
-        cols_to_delete = ["conference", "teamId"]
-        team_game = team_game.drop(columns=cols_to_delete, axis = 1)
 
         team_game = label_encoder(team_game, "homeAway")
         team_game = team_game.fillna(0)
@@ -133,4 +144,11 @@ if __name__ == "__main__":
         col_list = ["completionAttempts","fourthDownEff","thirdDownEff","totalPenaltiesYards"]
         team_game = turn_dash_precentage(team_game, col_list)
 
+        team_season = season_team_stats(api_instance_season)
+        team_season = team_season.fillna(0)
+
+        ap_poll = get_latest_ap_poll(api_instance_rankings)
+
         team_game.to_csv("../CFB_predictions/data/team_game_dat.csv", index=False, encoding="utf-8")
+        team_season.to_csv("../CFB_predictions/data/team_season_dat.csv", index=False, encoding="utf-8")
+        ap_poll.to_csv("../CFB_predictions/data/ap_poll_dat.csv", index=False, encoding="utf-8")
