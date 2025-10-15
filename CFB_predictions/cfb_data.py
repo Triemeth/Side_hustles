@@ -26,8 +26,8 @@ def config():
 
     return configuration
 
-
-#get team seasons stats up to upcoming games
+#need to fix home and away
+#get team seasons stats up to upcoming games will have to loop through
 def season_team_stats(api_client, team, year = CURR_YEAR):
     api_instance = cfbd.StatsApi(api_client)
 
@@ -47,7 +47,47 @@ def season_team_stats(api_client, team, year = CURR_YEAR):
     return df
 
 #get game stats mainly for rolling averages and home and away stuff
+def team_stats_by_game(api_instance, year=CURR_YEAR, week = 1):
 
+    keep_conf = ["American Athletic", "ACC", 
+                     "Big 12", "Big Ten", 
+                     "Conference USA", "FBS Independents", 
+                     "Mid-American", "Mountain West",
+                     "Pac-12", "SEC", "Sun Belt"]
+
+    games = api_instance.get_game_team_stats(year = year, week = week)
+    parsed_games = []
+
+    for g in games:
+        g_dict = g.to_dict()
+        for t in g_dict.get("teams", []):
+            base = {
+                "gameId": g_dict.get("id"),
+                "team": t.get("team"),
+                "teamId": t.get("team_id"),
+                "conference": t.get("conference"),
+                "homeAway": t.get("home_away"),
+                "points": t.get("points"),
+            }
+
+            stats_dict = {}
+            for s in t.get("stats", []):
+                cat = s.get("category")
+                val = s.get("stat")
+                try:
+                    val = float(val)
+                except (TypeError, ValueError):
+                    pass
+                stats_dict[cat] = val
+
+            parsed_games.append({**base, **stats_dict})
+
+    df = pd.DataFrame(parsed_games)
+    df = df.reindex(sorted(df.columns), axis=1)
+
+    df = df[df["conference"].isin(keep_conf)]
+
+    return df
 
 
 #data output is monthly for some values due to excel transforming stuff like 11-40 to nov-40 or something need to regex to fix this or turn to precentage
@@ -59,37 +99,11 @@ if __name__ == "__main__":
         api_client.default_headers["Authorization"] = f"Bearer {configuration.api_key['authorization']}"
         api_instance = cfbd.GamesApi(api_client)
 
-        games = api_instance.get_game_team_stats(year=CURR_YEAR, week=1)
-        parsed_games = []
+        df = pd.DataFrame()
 
-        for g in games:
-            g_dict = g.to_dict()
-            for t in g_dict.get("teams", []):
-                base = {
-                    "gameId": g_dict.get("id"),
-                    "team": t.get("team"),
-                    "teamId": t.get("team_id"),
-                    "conference": t.get("conference"),
-                    "homeAway": t.get("home_away"),
-                    "points": t.get("points"),
-                }
+        for i in range(1,6):
+            hold = team_stats_by_game(api_instance, CURR_YEAR, i)
+            df = pd.concat([df, hold], ignore_index=True)
 
-                stats_dict = {}
-                for s in t.get("stats", []):
-                    cat = s.get("category")
-                    val = s.get("stat")
-                    try:
-                        val = float(val)
-                    except (TypeError, ValueError):
-                        pass
-                    stats_dict[cat] = val
-
-                parsed_games.append({**base, **stats_dict})
-
-        df = pd.DataFrame(parsed_games)
-        df = df.reindex(sorted(df.columns), axis=1)
-
-        print(df.head(10))
-
-        # df.to_csv("../CFB_predictions/check_dat.csv", index=False, encoding="utf-8")
-        # print(f"Wrote {len(df)} rows to check_dat.csv")
+        df.to_csv("../CFB_predictions/check_dat.csv", index=False, encoding="utf-8")
+        print(f"Wrote {len(df)} rows to check_dat.csv")
