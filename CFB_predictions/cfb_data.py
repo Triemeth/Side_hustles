@@ -2,9 +2,10 @@ import cfbd
 import os
 from dotenv import load_dotenv
 import pandas as pd
+import numpy as np
 from datetime import datetime
 from pathlib import Path
-from pprint import pprint
+from sklearn.preprocessing import LabelEncoder
 
 CURR_YEAR = datetime.now().year
 
@@ -26,6 +27,12 @@ def config():
 
     return configuration
 
+def label_encoder(df, col_name):
+    le = LabelEncoder()
+    df[col_name] = le.fit_transform(df[col_name])
+
+    return df
+
 #need to fix home and away
 #get team seasons stats up to upcoming games will have to loop through
 def season_team_stats(api_client, team, year = CURR_YEAR):
@@ -43,6 +50,18 @@ def season_team_stats(api_client, team, year = CURR_YEAR):
 
     df = pd.DataFrame(data)
     df = df.pivot(index="team", columns="stat_name", values="value").reset_index()
+
+    return df
+
+def turn_dash_precentage(df, col_list):
+    for col in col_list:
+        df[col] = df[col].astype("string")
+
+        split_vals = df[col].str.extract(r"(\d+)-(\d+)")
+        num = pd.to_numeric(split_vals[0], errors="coerce")
+        den = pd.to_numeric(split_vals[1], errors="coerce")
+        
+        df[col] = np.where((den.notna()) & (den != 0), num / den, 0)
 
     return df
 
@@ -66,7 +85,7 @@ def team_stats_by_game(api_instance, year=CURR_YEAR, week = 1):
                 "team": t.get("team"),
                 "teamId": t.get("team_id"),
                 "conference": t.get("conference"),
-                "homeAway": t.get("home_away"),
+                "homeAway": t.get("homeAway"),
                 "points": t.get("points"),
             }
 
@@ -99,11 +118,19 @@ if __name__ == "__main__":
         api_client.default_headers["Authorization"] = f"Bearer {configuration.api_key['authorization']}"
         api_instance = cfbd.GamesApi(api_client)
 
-        df = pd.DataFrame()
+        team_game = pd.DataFrame()
 
-        for i in range(1,6):
+        for i in range(1,7):
             hold = team_stats_by_game(api_instance, CURR_YEAR, i)
-            df = pd.concat([df, hold], ignore_index=True)
+            team_game = pd.concat([team_game, hold], ignore_index=True)
 
-        df.to_csv("../CFB_predictions/check_dat.csv", index=False, encoding="utf-8")
-        print(f"Wrote {len(df)} rows to check_dat.csv")
+        cols_to_delete = ["conference", "teamId"]
+        team_game = team_game.drop(columns=cols_to_delete, axis = 1)
+
+        team_game = label_encoder(team_game, "homeAway")
+        team_game = team_game.fillna(0)
+
+        col_list = ["completionAttempts","fourthDownEff","thirdDownEff","totalPenaltiesYards"]
+        team_game = turn_dash_precentage(team_game, col_list)
+
+        team_game.to_csv("../CFB_predictions/data/team_game_dat.csv", index=False, encoding="utf-8")
