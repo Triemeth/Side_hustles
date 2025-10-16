@@ -102,8 +102,8 @@ def team_stats_by_game(api_instance, year=CURR_YEAR, week = 1):
 
     return df
 
-def get_latest_ap_poll(api_instance, year = CURR_YEAR):
-    rankings = api_instance.get_rankings(year=year)
+def get_ap_poll(api_instance, year = CURR_YEAR):
+    rankings = api_instance.get_rankings(year=year, week = 1)
 
     latest = max(rankings, key=lambda x: x.week)
     ap_poll = next((poll for poll in latest.polls if poll.poll == "AP Top 25"), None)
@@ -147,8 +147,8 @@ if __name__ == "__main__":
         team_season = season_team_stats(api_instance_season)
         team_season = team_season.fillna(0)
 
-        ap_poll = get_latest_ap_poll(api_instance_rankings)
+        ap_poll = get_ap_poll(api_instance_rankings)
 
-        team_game.to_csv("../CFB_predictions/data/team_game_dat.csv", index=False, encoding="utf-8")
-        team_season.to_csv("../CFB_predictions/data/team_season_dat.csv", index=False, encoding="utf-8")
-        ap_poll.to_csv("../CFB_predictions/data/ap_poll_dat.csv", index=False, encoding="utf-8")
+        team_game.to_csv("../CFB_predictions/pre_calc_data/team_game_dat.csv", index=False, encoding="utf-8")
+        team_season.to_csv("../CFB_predictions/pre_calc_data/team_season_dat.csv", index=False, encoding="utf-8")
+        ap_poll.to_csv("../CFB_predictions/pre_calc_data/ap_poll_dat.csv", index=False, encoding="utf-8")
