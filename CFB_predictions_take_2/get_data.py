@@ -83,11 +83,12 @@ def team_stats_by_game(api_instance, year=CURR_YEAR, week = 1):
 
     df = pd.DataFrame(parsed_games)
     df = df.reindex(sorted(df.columns), axis=1)
+    df["week"] = week
 
     return df
 
-def get_ap_poll(api_instance, week_num, year = CURR_YEAR):
-    rankings = api_instance.get_rankings(year=year, week = week_num)
+def get_ap_poll(api_instance, week, year = CURR_YEAR):
+    rankings = api_instance.get_rankings(year=year, week = week)
 
     latest = max(rankings, key=lambda x: x.week)
     ap_poll = next((poll for poll in latest.polls if poll.poll == "AP Top 25"), None)
@@ -104,7 +105,7 @@ def get_ap_poll(api_instance, week_num, year = CURR_YEAR):
         })
 
     df = pd.DataFrame(data)
-    df["week"] = week_num
+    df["week"] = week
 
     return df
 
@@ -135,11 +136,11 @@ if __name__ == "__main__":
             hold = get_ap_poll(api_instance_rankings, i, CURR_YEAR)
             ap_poll_df = pd.concat([ap_poll_df, hold], ignore_index=True)
 
-        print(ap_poll_df.tail())
+        print(ap_poll_df.head())
         print(team_game.head())
 
-        team_game.to_csv("../CFB_predictions_take_2/data/weekly_game_data.csv", index=False, encoding="utf-8")
-        ap_poll_df.to_csv("../CFB_predictions_take_2/data/weekly_ap_poll_data.csv", index=False, encoding="utf-8")
+        team_game.to_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv", index=False, encoding="utf-8")
+        ap_poll_df.to_csv("../CFB_predictions_take_2/pre_calc_data/weekly_ap_poll_data.csv", index=False, encoding="utf-8")
 
 
 
