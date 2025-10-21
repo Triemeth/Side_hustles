@@ -36,6 +36,17 @@ if __name__ == "__main__":
     ap_poll_dat = clean_ap_poll(ap_poll_dat)
 
     combined_data = pd.merge(games_dat, ap_poll_dat, left_on = ["team", "week"], right_on = ["team", "week"], how = "left")
-    dat_check = combined_data[combined_data["ap_rank"].notna()]
-    print(dat_check.head())
-    print(combined_data.head())
+    
+    col_names = combined_data.columns
+    print(col_names)
+
+    rolling_avg_cols = ['completionAttempts', 'defensiveTDs', 'firstDowns', 'fourthDownEff', 
+                'fumblesLost', 'fumblesRecovered','homeAway', 'interceptionTDs', 
+                'interceptionYards', 'interceptions','kickReturnTDs', 'kickReturnYards', 
+                'kickReturns', 'kickingPoints','netPassingYards', 'passesDeflected',
+                'passesIntercepted', 'passingTDs','points', 'possessionTime', 
+                'puntReturnTDs', 'puntReturnYards','puntReturns', 'qbHurries',
+                'rushingAttempts', 'rushingTDs', 'rushingYards', 'sacks',
+                'tackles', 'tacklesForLoss', 'thirdDownEff', 'totalFumbles', 
+                'totalPenaltiesYards', 'totalYards','turnovers', 'yardsPerPass', 
+                'yardsPerRushAttempt']
