@@ -5,3 +5,4 @@ For data calculations need(in order):
 
 
 will probably want to do all this for multiple seasons for training purposes
+need to figure out what model to do thinking XGboost rn
