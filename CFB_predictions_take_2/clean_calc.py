@@ -26,6 +26,11 @@ def clean_ap_poll(df):
     df = df.drop(columns = ["conference"], axis = 1)
     return df
 
+def possesion_time_clean(df):
+    df["possessionTimeSeconds"] = pd.to_numeric(df["possessionTime"].str[:2]) * 60 + pd.to_numeric(df["possessionTime"].str[3:])
+    df = df.drop("possessionTime", axis = 1)
+    return df
+
 if __name__ == "__main__":
     games_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv")
     ap_poll_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_ap_poll_data.csv")
@@ -36,17 +41,21 @@ if __name__ == "__main__":
     ap_poll_dat = clean_ap_poll(ap_poll_dat)
 
     combined_data = pd.merge(games_dat, ap_poll_dat, left_on = ["team", "week"], right_on = ["team", "week"], how = "left")
-    
-    col_names = combined_data.columns
-    print(col_names)
+    combined_data = possesion_time_clean(combined_data)
 
     rolling_avg_cols = ['completionAttempts', 'defensiveTDs', 'firstDowns', 'fourthDownEff', 
-                'fumblesLost', 'fumblesRecovered','homeAway', 'interceptionTDs', 
+                'fumblesLost', 'fumblesRecovered', 'interceptionTDs', 
                 'interceptionYards', 'interceptions','kickReturnTDs', 'kickReturnYards', 
                 'kickReturns', 'kickingPoints','netPassingYards', 'passesDeflected',
-                'passesIntercepted', 'passingTDs','points', 'possessionTime', 
+                'passesIntercepted', 'passingTDs','points', 'possessionTimeSeconds', 
                 'puntReturnTDs', 'puntReturnYards','puntReturns', 'qbHurries',
                 'rushingAttempts', 'rushingTDs', 'rushingYards', 'sacks',
                 'tackles', 'tacklesForLoss', 'thirdDownEff', 'totalFumbles', 
                 'totalPenaltiesYards', 'totalYards','turnovers', 'yardsPerPass', 
                 'yardsPerRushAttempt']
+    
+
+    for col in rolling_avg_cols:
+        combined_data[f"{col}_rolling"] = combined_data[col].rolling(window = 3).mean()
+
+    combined_data.to_csv("../CFB_predictions_take_2/pre_calc_data/temp_check.csv", index=False, encoding="utf-8")

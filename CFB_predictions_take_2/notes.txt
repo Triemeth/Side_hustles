@@ -2,3 +2,6 @@ For data calculations need(in order):
     cumliative up to that certain week
     rolling averages up to that certain week(most likely in 3 week stents will play around with to find the optimal amount)
     scoreing functions for teams offenses and defense to see strength of scedule(make sure that rolling averages aren't skewed due to weak play)
+
+
+will probably want to do all this for multiple seasons for training purposes
