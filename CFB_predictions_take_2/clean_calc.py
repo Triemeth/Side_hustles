@@ -33,45 +33,48 @@ def possesion_time_clean(df):
 
 #need if 0 dont add ap_strngth
 #need to fix all columns as well
-def comp_def_score(df):
-    if df["ap_poll"] != 0:
-        df["defensive_score"] = (
-        -0.25 * (df["totalYardsOpponent"] / df["games"]) -
-        0.20 * (7 * (df["passingTDsOpponent"] + df["rushingTDsOpponent"])) +
-        0.15 * (df["turnoversOpponent"] / df["games"]) +
-        0.10 * (df["sacks"] / df["games"]) -
-        0.10 * (df["thirdDownConversionsOpponent"] / df["thirdDownsOpponent"]).replace([np.inf, np.nan], 0) -
-        0.10 * (df["fourthDownConversionsOpponent"] / df["fourthDownsOpponent"]).replace([np.inf, np.nan], 0) -
-        0.10 * (df["penaltyYardsOpponent"] / df["games"]) +
-        0.10 * df["ap_strength"])
-    else:
-        df["defensive_score"] = (
-        -0.25 * (df["totalYardsOpponent"] / df["games"]) -
-        0.20 * (7 * (df["passingTDsOpponent"] + df["rushingTDsOpponent"])) +
-        0.15 * (df["turnoversOpponent"] / df["games"]) +
-        0.10 * (df["sacks"] / df["games"]) -
-        0.10 * (df["thirdDownConversionsOpponent"] / df["thirdDownsOpponent"]).replace([np.inf, np.nan], 0) -
-        0.10 * (df["fourthDownConversionsOpponent"] / df["fourthDownsOpponent"]).replace([np.inf, np.nan], 0) -
-        0.10 * (df["penaltyYardsOpponent"] / df["games"]))
+#this was stuiped shouldnt be calculating on opp vals only on team values
+#will need a secong self merge(or jus pre merge)
 
-    return df
+# def comp_def_score(df):
+#     if df["ap_poll"] != 0:
+#         df["defensive_score"] = (
+#         -0.25 * df["totalYards_rolling_sum_opp"] -
+#         0.20 * (7 * (df["passingTDs_rolling_sum_opp"] + df["rushingTDs_rolling_sum_opp"])) +
+#         0.15 * df["interceptions_rolling_sum"]  +
+#         0.10 * df["sacks_rolling_sum"]  -
+#         0.10 * (df["thirdDownConversionsOpponent"] / df["thirdDownsOpponent"]).replace([np.inf, np.nan], 0) -
+#         0.10 * (df["fourthDownEff_rolling_sum_opp"] / df["fourthDownsOpponent"]).replace([np.inf, np.nan], 0) -
+#         0.10 * df["penaltyYardsOpponent"] +
+#         0.10 * df["ap_strength"])
+#     else:
+#         df["defensive_score"] = (
+#         -0.25 * (df["totalYardsOpponent"] / df["games"]) -
+#         0.20 * (7 * (df["passingTDsOpponent"] + df["rushingTDsOpponent"])) +
+#         0.15 * (df["turnoversOpponent"] / df["games"]) +
+#         0.10 * (df["sacks"] / df["games"]) -
+#         0.10 * (df["thirdDownConversionsOpponent"] / df["thirdDownsOpponent"]).replace([np.inf, np.nan], 0) -
+#         0.10 * (df["fourthDownConversionsOpponent"] / df["fourthDownsOpponent"]).replace([np.inf, np.nan], 0) -
+#         0.10 * (df["penaltyYardsOpponent"] / df["games"]))
+
+#     return df
 
 #need if 0 dont add ap_strngth
 #need to fix all columns as well
-def comp_off_score(df):
-    df["offensive_score_raw"] = (
-        0.25 * (df["totalYards"] / df["games"]) +
-        0.20 * (7 * (df["passingTDs"] + df["rushingTDs"])) +
-        0.15 * ((df["thirdDownConversions"] / df["thirdDowns"]).replace([np.inf, np.nan], 0)) +
-        0.10 * ((df["fourthDownConversions"] / df["fourthDowns"]).replace([np.inf, np.nan], 0)) +
-        0.10 * (df["possessionTime"] / df["games"]) -
-        0.10 * (df["turnovers"] / df["games"]) -
-        0.10 * (df["penaltyYards"] / df["games"])
-    )
+# def comp_off_score(df):
+#     df["offensive_score_raw"] = (
+#         0.25 * (df["totalYards"] / df["games"]) +
+#         0.20 * (7 * (df["passingTDs"] + df["rushingTDs"])) +
+#         0.15 * ((df["thirdDownConversions"] / df["thirdDowns"]).replace([np.inf, np.nan], 0)) +
+#         0.10 * ((df["fourthDownConversions"] / df["fourthDowns"]).replace([np.inf, np.nan], 0)) +
+#         0.10 * (df["possessionTime"] / df["games"]) -
+#         0.10 * (df["turnovers"] / df["games"]) -
+#         0.10 * (df["penaltyYards"] / df["games"])
+#     )
 
-    df["offensive_score_adj"] = df["offensive_score_raw"] * (1 + 0.20 * df["ap_strength"])
+#     df["offensive_score_adj"] = df["offensive_score_raw"] * (1 + 0.20 * df["ap_strength"])
 
-    return df
+#     return df
 
 if __name__ == "__main__":
     games_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv")
@@ -96,18 +99,55 @@ if __name__ == "__main__":
                 'totalPenaltiesYards', 'totalYards','turnovers', 'yardsPerPass', 
                 'yardsPerRushAttempt']
     
+    
     for col in rolling_cols:
-        combined_data[f"{col}_rolling_avg"] = combined_data.groupby("team")[col].rolling(window=3).mean().reset_index(level=0, drop=True)
-        combined_data[f"{col}_rolling_sum"] = combined_data.groupby("team")[col].rolling(window=3).sum().reset_index(level=0, drop=True)
+        combined_data[f"{col}_rolling_avg"] = (
+            combined_data.groupby("team")[col]
+            .rolling(window=3)
+            .mean()
+            .reset_index(level=0, drop=True)
+        )
+        
+        combined_data[f"{col}_rolling_sum"] = (
+            combined_data.groupby("team")[col]
+            .rolling(window=3)
+            .sum()
+            .reset_index(level=0, drop=True)
+        )
 
     combined_data["ap_strength"] = combined_data["ap_strength"].fillna(0)
     combined_data["ap_rank"] = combined_data["ap_rank"].fillna(0)
 
-    combined_data = combined_data.dropna()
+    combined_data = combined_data.merge(combined_data, left_on = ["gameId", "team"], right_on = ["gameId", "team_opp"], suffixes = ("", "_opp"))
 
+    #this may be in the wrong spot ngl
+    combined_data = combined_data.sort_values(["team", "week"]).copy()
+    combined_data["points_opp"] = pd.to_numeric(combined_data["points_opp"], errors="coerce").fillna(0)
+
+    combined_data["points_scored_against_rolling_avg"] = (
+        combined_data.groupby("team")["points_opp"]
+        .transform(lambda x: x.rolling(window=3, min_periods=1).mean())
+    )
+
+    combined_data["points_scored_against_rolling_sum"] = (
+        combined_data.groupby("team")["points_opp"]
+        .transform(lambda x: x.rolling(window=3, min_periods=1).sum())
+    )
+
+    combined_data = combined_data.dropna()
+    point = combined_data["points"]
     combined_data = combined_data.drop(columns = rolling_cols, axis = 1)
+    combined_data["points"] = point
+
+    cols_to_drop = ["date_opp", "homeAway_opp", "team_opp", "week_opp", "team_opp_opp"]
+    combined_data = combined_data.drop(columns = cols_to_drop, axis = 1)
 
     combined_data.to_csv("../CFB_predictions_take_2/pre_calc_data/combined_data.csv", index=False, encoding="utf-8")
+
+    # sum_opp_cols = [col for col in combined_data.columns if "_sum_opp" in col]
+    # avg_opp_cols = [col for col in combined_data.columns if "_avg_opp" in col]
+    # sum_cols = [col for col in combined_data.columns if "_sum" in col]
+    # avg_cols = [col for col in combined_data.columns if "_avg" in col]
 
     #combined_data = comp_def_score(combined_data)
     #combined_data = comp_off_score(combined_data)
