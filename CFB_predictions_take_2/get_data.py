@@ -111,7 +111,7 @@ def get_ap_poll(api_instance, week, year = CURR_YEAR):
 
 if __name__ == "__main__":
     configuration = config()
-    week_num = 7
+    week_num = 10
 
     with cfbd.ApiClient(configuration) as api_client:
         api_client.default_headers["Authorization"] = f"Bearer {configuration.api_key['authorization']}"
@@ -136,7 +136,7 @@ if __name__ == "__main__":
             hold = get_ap_poll(api_instance_rankings, i, CURR_YEAR)
             ap_poll_df = pd.concat([ap_poll_df, hold], ignore_index=True)
 
-        print(ap_poll_df.head())
+        print(ap_poll_df.tail())
         print(team_game.head())
 
         team_game.to_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv", index=False, encoding="utf-8")
