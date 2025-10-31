@@ -1,17 +1,19 @@
-NOTE: there may be some way bigger issues with my code right now that i am not currently noticing
-
 For data calculations need(in order):
     cumliative up to that certain week
     rolling averages up to that certain week(most likely in 3 week stents will play around with to find the optimal amount)
-
     scoreing functions for teams offenses and defense to see strength of scedule(make sure that rolling averages aren't skewed due to weak play) prolly make rolling too right?
     self join combining opp team data on the same week
     drop excese columns
 
 NOTE: as of now i think the rolling averages are including the week they are on it should just be the weeks before
+    this isn't an issue i think just use the weeks before rolling averages and sums to predict the outcome of the next week
 NOTE: need a binary win or loss can just take the score of both and see which is bigger
 
 
 
 will probably want to do all this for multiple seasons for training purposes
 need to figure out what model to do thinking XGboost rn
+
+NEXT TIME
+    binary win loss column
+    scoring functions
