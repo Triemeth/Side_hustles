@@ -111,7 +111,7 @@ def get_ap_poll(api_instance, week, year = CURR_YEAR):
 
 if __name__ == "__main__":
     configuration = config()
-    week_num = 10
+    week_num = 11
 
     with cfbd.ApiClient(configuration) as api_client:
         api_client.default_headers["Authorization"] = f"Bearer {configuration.api_key['authorization']}"

@@ -15,7 +15,6 @@ will probably want to do all this for multiple seasons for training purposes
 need to figure out what model to do thinking XGboost rn
 
 NEXT TIME
-    binary win loss column
     scoring functions
 
 Betting porportion formula:
@@ -29,3 +28,7 @@ Betting porportion formula:
 
     EX.
         53.7 - (1 - 53.7)/2.5 - 1 = .0835
+
+NEED TO PROBABLY DO LATER DOWN THE LINE:
+    implement elo for scoring functions as of now will just use ap poll rankings
+    do something like: https://blog.collegefootballdata.com/talking-tech-elo-ratings/

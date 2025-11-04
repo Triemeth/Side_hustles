@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import StandardScaler
 
 def ap_strength_bonus(rank):
     return (26 - rank) / 25 
@@ -31,50 +32,49 @@ def possesion_time_clean(df):
     df = df.drop("possessionTime", axis = 1)
     return df
 
+def bin_win_loss(df):
+    df["Win?"] = np.where(df["points"] > df["points_opp"], 1, 0)
+    return df
+
 #need if 0 dont add ap_strngth
 #need to fix all columns as well
 #this was stuiped shouldnt be calculating on opp vals only on team values
 #will need a secong self merge(or jus pre merge)
+#well as of now this is calculting for the weeks rolling average so it doesn't really make sense its like calculating the score for the last three weeks but i am using the last week to predict the upcoming week
+#may need to do this pre rolling averages for every week then make that a rolling average
 
-# def comp_def_score(df):
-#     if df["ap_poll"] != 0:
-#         df["defensive_score"] = (
-#         -0.25 * df["totalYards_rolling_sum_opp"] -
-#         0.20 * (7 * (df["passingTDs_rolling_sum_opp"] + df["rushingTDs_rolling_sum_opp"])) +
-#         0.15 * df["interceptions_rolling_sum"]  +
-#         0.10 * df["sacks_rolling_sum"]  -
-#         0.10 * (df["thirdDownConversionsOpponent"] / df["thirdDownsOpponent"]).replace([np.inf, np.nan], 0) -
-#         0.10 * (df["fourthDownEff_rolling_sum_opp"] / df["fourthDownsOpponent"]).replace([np.inf, np.nan], 0) -
-#         0.10 * df["penaltyYardsOpponent"] +
-#         0.10 * df["ap_strength"])
-#     else:
-#         df["defensive_score"] = (
-#         -0.25 * (df["totalYardsOpponent"] / df["games"]) -
-#         0.20 * (7 * (df["passingTDsOpponent"] + df["rushingTDsOpponent"])) +
-#         0.15 * (df["turnoversOpponent"] / df["games"]) +
-#         0.10 * (df["sacks"] / df["games"]) -
-#         0.10 * (df["thirdDownConversionsOpponent"] / df["thirdDownsOpponent"]).replace([np.inf, np.nan], 0) -
-#         0.10 * (df["fourthDownConversionsOpponent"] / df["fourthDownsOpponent"]).replace([np.inf, np.nan], 0) -
-#         0.10 * (df["penaltyYardsOpponent"] / df["games"]))
-
-#     return df
-
-#need if 0 dont add ap_strngth
-#need to fix all columns as well
 # def comp_off_score(df):
-#     df["offensive_score_raw"] = (
-#         0.25 * (df["totalYards"] / df["games"]) +
-#         0.20 * (7 * (df["passingTDs"] + df["rushingTDs"])) +
-#         0.15 * ((df["thirdDownConversions"] / df["thirdDowns"]).replace([np.inf, np.nan], 0)) +
-#         0.10 * ((df["fourthDownConversions"] / df["fourthDowns"]).replace([np.inf, np.nan], 0)) +
-#         0.10 * (df["possessionTime"] / df["games"]) -
-#         0.10 * (df["turnovers"] / df["games"]) -
-#         0.10 * (df["penaltyYards"] / df["games"])
-#     )
+#     weights = [0.18, 0.15, 0.12, 0.10, 0.10, 0.08, 0.08, 0.06, 0.05, 0.04, -0.02, -0.10, -0.08, 0.06]
+#     off_cols = ["points_rolling_avg", "totalYards_rolling_avg", "netPassingYards_rolling_avg",
+#                 "rushingYards_rolling_avg", "passingTDs_rolling_avg", "rushingTDs_rolling_avg",
+#                 "thirdDownEff_rolling_avg", "yardsPerPass_rolling_avg", "yardsPerRushAttempt_rolling_avg",
+#                 "kickingPoints_rolling_avg", "puntReturnYards_rolling_avg", "possessionTimeSeconds_rolling_avg", 
+#                 "turnovers_rolling_avg", "totalPenaltiesYards_rolling_avg", "ap_strength_opp"]
 
-#     df["offensive_score_adj"] = df["offensive_score_raw"] * (1 + 0.20 * df["ap_strength"])
+#     scaler = StandardScaler()
+#     df_scaled = df.copy()
 
-#     return df
+#     df_scaled[off_cols] = scaler.fit_transform(df[off_cols])
+
+#     off_score = (
+#         weights[0]  * df_scaled["points_rolling_avg"] +
+#         weights[1]  * df_scaled["totalYards_rolling_avg"] +
+#         weights[2]  * df_scaled["netPassingYards_rolling_avg"] +
+#         weights[3]  * df_scaled["rushingYards_rolling_avg"] +
+#         weights[4]  * df_scaled["passingTDs_rolling_avg"] +
+#         weights[5]  * df_scaled["rushingTDs_rolling_avg"] +
+#         weights[6]  * df_scaled["thirdDownEff_rolling_avg"] +
+#         weights[7]  * df_scaled["yardsPerPass_rolling_avg"] +
+#         weights[8]  * df_scaled["yardsPerRushAttempt_rolling_avg"] +
+#         weights[9]  * df_scaled["kickingPoints_rolling_avg"] +
+#         weights[10] * (df_scaled["puntReturnYards_rolling_avg"] + df_scaled["possessionTimeSeconds_rolling_avg"]) +
+#         weights[11] * df_scaled["turnovers_rolling_avg"] +
+#         weights[12] * df_scaled["totalPenaltiesYards_rolling_avg"])
+
+#     ap_strength_add = np.where(df_scaled["ap_rank"] != 0, weights[13] * df_scaled["ap_strength_opp"], 0)
+#     df_scaled["off_score"] = off_score + ap_strength_add
+    
+#     return df_scaled["off_score"]
 
 if __name__ == "__main__":
     games_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv")
@@ -87,6 +87,8 @@ if __name__ == "__main__":
 
     combined_data = pd.merge(games_dat, ap_poll_dat, left_on = ["team", "week"], right_on = ["team", "week"], how = "left")
     combined_data = possesion_time_clean(combined_data)
+
+    #should probably preform scoring functions here
 
     rolling_cols = ['completionAttempts', 'defensiveTDs', 'firstDowns', 'fourthDownEff', 
                 'fumblesLost', 'fumblesRecovered', 'interceptionTDs', 
@@ -142,12 +144,12 @@ if __name__ == "__main__":
     cols_to_drop = ["date_opp", "homeAway_opp", "team_opp", "week_opp", "team_opp_opp"]
     combined_data = combined_data.drop(columns = cols_to_drop, axis = 1)
 
+    combined_data = bin_win_loss(combined_data)
+    #combined_data["off_score"] = comp_off_score(combined_data)
+
     combined_data.to_csv("../CFB_predictions_take_2/pre_calc_data/combined_data.csv", index=False, encoding="utf-8")
 
     # sum_opp_cols = [col for col in combined_data.columns if "_sum_opp" in col]
     # avg_opp_cols = [col for col in combined_data.columns if "_avg_opp" in col]
     # sum_cols = [col for col in combined_data.columns if "_sum" in col]
     # avg_cols = [col for col in combined_data.columns if "_avg" in col]
-
-    #combined_data = comp_def_score(combined_data)
-    #combined_data = comp_off_score(combined_data)
