@@ -17,3 +17,15 @@ need to figure out what model to do thinking XGboost rn
 NEXT TIME
     binary win loss column
     scoring functions
+
+Betting porportion formula:
+    f* => the fraction of the current bankroll to wager
+    p => probability of a win
+    q => 1 - p is the probability of a loss
+    b => porportion of the bet gained with a win
+        if betting 10 dollars on 2-to-1 odds (returned 30 winning 20) then b = 20/10 = 2.0
+
+    f* = p - q/b = p - (1 - p)/b
+
+    EX.
+        53.7 - (1 - 53.7)/2.5 - 1 = .0835
