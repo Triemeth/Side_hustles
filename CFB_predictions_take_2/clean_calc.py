@@ -36,45 +36,61 @@ def bin_win_loss(df):
     df["Win?"] = np.where(df["points"] > df["points_opp"], 1, 0)
     return df
 
-#need if 0 dont add ap_strngth
-#need to fix all columns as well
-#this was stuiped shouldnt be calculating on opp vals only on team values
-#will need a secong self merge(or jus pre merge)
-#well as of now this is calculting for the weeks rolling average so it doesn't really make sense its like calculating the score for the last three weeks but i am using the last week to predict the upcoming week
-#may need to do this pre rolling averages for every week then make that a rolling average
-
-# def comp_off_score(df):
-#     weights = [0.18, 0.15, 0.12, 0.10, 0.10, 0.08, 0.08, 0.06, 0.05, 0.04, -0.02, -0.10, -0.08, 0.06]
-#     off_cols = ["points_rolling_avg", "totalYards_rolling_avg", "netPassingYards_rolling_avg",
-#                 "rushingYards_rolling_avg", "passingTDs_rolling_avg", "rushingTDs_rolling_avg",
-#                 "thirdDownEff_rolling_avg", "yardsPerPass_rolling_avg", "yardsPerRushAttempt_rolling_avg",
-#                 "kickingPoints_rolling_avg", "puntReturnYards_rolling_avg", "possessionTimeSeconds_rolling_avg", 
-#                 "turnovers_rolling_avg", "totalPenaltiesYards_rolling_avg", "ap_strength_opp"]
-
-#     scaler = StandardScaler()
-#     df_scaled = df.copy()
-
-#     df_scaled[off_cols] = scaler.fit_transform(df[off_cols])
-
-#     off_score = (
-#         weights[0]  * df_scaled["points_rolling_avg"] +
-#         weights[1]  * df_scaled["totalYards_rolling_avg"] +
-#         weights[2]  * df_scaled["netPassingYards_rolling_avg"] +
-#         weights[3]  * df_scaled["rushingYards_rolling_avg"] +
-#         weights[4]  * df_scaled["passingTDs_rolling_avg"] +
-#         weights[5]  * df_scaled["rushingTDs_rolling_avg"] +
-#         weights[6]  * df_scaled["thirdDownEff_rolling_avg"] +
-#         weights[7]  * df_scaled["yardsPerPass_rolling_avg"] +
-#         weights[8]  * df_scaled["yardsPerRushAttempt_rolling_avg"] +
-#         weights[9]  * df_scaled["kickingPoints_rolling_avg"] +
-#         weights[10] * (df_scaled["puntReturnYards_rolling_avg"] + df_scaled["possessionTimeSeconds_rolling_avg"]) +
-#         weights[11] * df_scaled["turnovers_rolling_avg"] +
-#         weights[12] * df_scaled["totalPenaltiesYards_rolling_avg"])
-
-#     ap_strength_add = np.where(df_scaled["ap_rank"] != 0, weights[13] * df_scaled["ap_strength_opp"], 0)
-#     df_scaled["off_score"] = off_score + ap_strength_add
+def off_score(df):
     
-#     return df_scaled["off_score"]
+    offense_metrics = ["totalYards", "netPassingYards", "passingTDs",
+                       "rushingTDs", "yardsPerPass", "yardsPerRushAttempt",
+                       "thirdDownEff", "possessionTimeSeconds", "points",
+                       "kickingPoints", "rushingAttempts", "sacks",
+                       "turnovers", "totalPenaltiesYards"]
+    
+    offense_weights = [
+        0.10,   # totalYards
+        0.05,   # netPassingYards
+        0.15,   # passingTDs
+        0.10,   # rushingTDs
+        0.10,   # yardsPerPass
+        0.10,   # yardsPerRushAttempt
+        0.10,   # thirdDownEff
+        0.05,   # possessionTimeSeconds
+        0.15,   # points
+        0.02,   # kickingPoints
+        0.03,   # rushingAttempts
+        -0.05,  # sacks (bad)
+        -0.12,  # turnovers (very bad)
+        -0.08,  # totalPenaltiesYards (bad)
+        0.06    # <-- THIS IS *AP STRENGTH WEIGHT*
+    ]
+
+    scaler = StandardScaler()
+    df_scaled = df.copy()
+    
+    df_scaled[offense_metrics] = scaler.fit_transform(df[offense_metrics])
+
+    off_score = (
+        offense_weights[0]  * df_scaled["totalYards"] +
+        offense_weights[1]  * df_scaled["netPassingYards"] +
+        offense_weights[2]  * df_scaled["passingTDs"] +
+        offense_weights[3]  * df_scaled["rushingTDs"] +
+        offense_weights[4]  * df_scaled["yardsPerPass"] +
+        offense_weights[5]  * df_scaled["yardsPerRushAttempt"] +
+        offense_weights[6]  * df_scaled["thirdDownEff"] +
+        offense_weights[7]  * df_scaled["possessionTimeSeconds"] +
+        offense_weights[8]  * df_scaled["points"] +
+        offense_weights[9]  * df_scaled["kickingPoints"] +
+        offense_weights[10]  * df_scaled["rushingAttempts"] +
+        offense_weights[11]  * df_scaled["sacks"] +
+        offense_weights[12]  * df_scaled["turnovers"] +
+        offense_weights[13]  * df_scaled["totalPenaltiesYards"]
+    )
+    
+    #ap_strength_add = np.where(df_scaled["ap_rank"] != 0, offense_weights[14] * df_scaled["ap_strength_opp"], 0)
+    #df_scaled["off_score"] = off_score + ap_strength_add
+    df_scaled["off_score"] = off_score
+
+    return df_scaled["off_score"]
+
+
 
 if __name__ == "__main__":
     games_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv")
@@ -88,7 +104,8 @@ if __name__ == "__main__":
     combined_data = pd.merge(games_dat, ap_poll_dat, left_on = ["team", "week"], right_on = ["team", "week"], how = "left")
     combined_data = possesion_time_clean(combined_data)
 
-    #should probably preform scoring functions here
+    #wrong spot prolly once opp team elo is factored (or ap_strength_opp)
+    combined_data["off_score"] = off_score(combined_data)
 
     rolling_cols = ['completionAttempts', 'defensiveTDs', 'firstDowns', 'fourthDownEff', 
                 'fumblesLost', 'fumblesRecovered', 'interceptionTDs', 
@@ -99,7 +116,7 @@ if __name__ == "__main__":
                 'rushingAttempts', 'rushingTDs', 'rushingYards', 'sacks',
                 'tackles', 'tacklesForLoss', 'thirdDownEff', 'totalFumbles', 
                 'totalPenaltiesYards', 'totalYards','turnovers', 'yardsPerPass', 
-                'yardsPerRushAttempt']
+                'yardsPerRushAttempt', "off_score"]
     
     
     for col in rolling_cols:
@@ -122,7 +139,6 @@ if __name__ == "__main__":
 
     combined_data = combined_data.merge(combined_data, left_on = ["gameId", "team"], right_on = ["gameId", "team_opp"], suffixes = ("", "_opp"))
 
-    #this may be in the wrong spot ngl
     combined_data = combined_data.sort_values(["team", "week"]).copy()
     combined_data["points_opp"] = pd.to_numeric(combined_data["points_opp"], errors="coerce").fillna(0)
 
