@@ -7,7 +7,7 @@ For data calculations need(in order):
 
 NOTE: as of now i think the rolling averages are including the week they are on it should just be the weeks before
     this isn't an issue i think just use the weeks before rolling averages and sums to predict the outcome of the next week
-NOTE: need a binary win or loss can just take the score of both and see which is bigger
+(DONE)NOTE: need a binary win or loss can just take the score of both and see which is bigger
 
 
 
@@ -15,7 +15,8 @@ will probably want to do all this for multiple seasons for training purposes
 need to figure out what model to do thinking XGboost rn
 
 NEXT TIME
-    scoring functions
+    (KINDA DONE NEED TO ADD ELO/AP RANKING)scoring functions will need a better spot so opp ELO/ap rank can be factored in
+    ADD ELO  
 
 Betting porportion formula:
     f* => the fraction of the current bankroll to wager

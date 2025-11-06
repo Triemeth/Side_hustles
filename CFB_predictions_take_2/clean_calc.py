@@ -44,6 +44,7 @@ def off_score(df):
                        "kickingPoints", "rushingAttempts", "sacks",
                        "turnovers", "totalPenaltiesYards"]
     
+    #used chatgpt to generate these will probably need to mess with a lil
     offense_weights = [
         0.10,   # totalYards
         0.05,   # netPassingYards
@@ -90,7 +91,50 @@ def off_score(df):
 
     return df_scaled["off_score"]
 
+def def_score(df):
 
+    defense_metrics = ["defensiveTDs", "interceptions", "interceptionYards",
+                       "fumblesRecovered", "sacks", "tackles", "tacklesForLoss",
+                       "passesDeflected", "qbHurries", "kickReturnTDs"]
+    
+    #used chatgpt to generate these will probably need to mess with a lil
+    defense_weights = [
+        0.15,   # defensiveTDs (rare & high impact)
+        0.20,   # interceptions
+        0.05,   # interceptionYards (value, but minor)
+        0.15,   # fumblesRecovered
+        0.10,   # sacks (pressure)
+        0.05,   # tackles (base volume stabilizer)
+        0.10,   # tacklesForLoss (disruptive plays)
+        0.08,   # passesDeflected (pass disruption)
+        0.07,   # qbHurries (pressure indicator)
+        0.03,   # kickReturnTDs (rare boost)
+        0.06    # <-- THIS IS *AP STRENGTH WEIGHT*
+    ]
+    
+    scaler = StandardScaler()
+    df_scaled = df.copy()
+
+    df_scaled[defense_metrics] = scaler.fit_transform(df_scaled[defense_metrics])
+
+    def_score = (
+        defense_weights[0]  * df_scaled["defensiveTDs"] +
+        defense_weights[1]  * df_scaled["interceptions"] +
+        defense_weights[2]  * df_scaled["interceptionYards"] +
+        defense_weights[3]  * df_scaled["fumblesRecovered"] +
+        defense_weights[4]  * df_scaled["sacks"] +
+        defense_weights[5]  * df_scaled["tackles"] +
+        defense_weights[6]  * df_scaled["tacklesForLoss"] +
+        defense_weights[7]  * df_scaled["passesDeflected"] +
+        defense_weights[8]  * df_scaled["qbHurries"] +
+        defense_weights[9]  * df_scaled["kickReturnTDs"]
+    )
+
+    #ap_strength_add = np.where(df_scaled["ap_rank"] != 0, defense_weights[14] * df_scaled["ap_strength_opp"], 0)
+    #df_scaled["def_score"] = def_score + ap_strength_add
+    df_scaled["def_score"] = def_score
+
+    return df_scaled["def_score"]
 
 if __name__ == "__main__":
     games_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv")
@@ -106,6 +150,7 @@ if __name__ == "__main__":
 
     #wrong spot prolly once opp team elo is factored (or ap_strength_opp)
     combined_data["off_score"] = off_score(combined_data)
+    combined_data["def_score"] = def_score(combined_data)
 
     rolling_cols = ['completionAttempts', 'defensiveTDs', 'firstDowns', 'fourthDownEff', 
                 'fumblesLost', 'fumblesRecovered', 'interceptionTDs', 
@@ -116,7 +161,7 @@ if __name__ == "__main__":
                 'rushingAttempts', 'rushingTDs', 'rushingYards', 'sacks',
                 'tackles', 'tacklesForLoss', 'thirdDownEff', 'totalFumbles', 
                 'totalPenaltiesYards', 'totalYards','turnovers', 'yardsPerPass', 
-                'yardsPerRushAttempt', "off_score"]
+                'yardsPerRushAttempt', "off_score", "def_score"]
     
     
     for col in rolling_cols:
