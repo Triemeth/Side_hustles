@@ -42,7 +42,7 @@ def off_score(df):
                        "rushingTDs", "yardsPerPass", "yardsPerRushAttempt",
                        "thirdDownEff", "possessionTimeSeconds", "points",
                        "kickingPoints", "rushingAttempts", "sacks",
-                       "turnovers", "totalPenaltiesYards"]
+                       "turnovers", "totalPenaltiesYards", "elo_opp"]
     
     #used chatgpt to generate these will probably need to mess with a lil
     offense_weights = [
@@ -60,7 +60,7 @@ def off_score(df):
         -0.05,  # sacks (bad)
         -0.12,  # turnovers (very bad)
         -0.08,  # totalPenaltiesYards (bad)
-        0.06    # <-- THIS IS *AP STRENGTH WEIGHT*
+        0.01    # ELO (this is so low due to elo being in thousands honesly still probably too large likely need .0001)
     ]
 
     scaler = StandardScaler()
@@ -82,11 +82,10 @@ def off_score(df):
         offense_weights[10]  * df_scaled["rushingAttempts"] +
         offense_weights[11]  * df_scaled["sacks"] +
         offense_weights[12]  * df_scaled["turnovers"] +
-        offense_weights[13]  * df_scaled["totalPenaltiesYards"]
+        offense_weights[13]  * df_scaled["totalPenaltiesYards"] +
+        offense_weights[14]  * df_scaled["elo_opp"]
     )
     
-    #ap_strength_add = np.where(df_scaled["ap_rank"] != 0, offense_weights[14] * df_scaled["ap_strength_opp"], 0)
-    #df_scaled["off_score"] = off_score + ap_strength_add
     df_scaled["off_score"] = off_score
 
     return df_scaled["off_score"]
@@ -95,7 +94,7 @@ def def_score(df):
 
     defense_metrics = ["defensiveTDs", "interceptions", "interceptionYards",
                        "fumblesRecovered", "sacks", "tackles", "tacklesForLoss",
-                       "passesDeflected", "qbHurries", "kickReturnTDs"]
+                       "passesDeflected", "qbHurries", "kickReturnTDs", "elo_opp"]
     
     #used chatgpt to generate these will probably need to mess with a lil
     defense_weights = [
@@ -109,7 +108,7 @@ def def_score(df):
         0.08,   # passesDeflected (pass disruption)
         0.07,   # qbHurries (pressure indicator)
         0.03,   # kickReturnTDs (rare boost)
-        0.06    # <-- THIS IS *AP STRENGTH WEIGHT*
+        0.01    # ELO (this is so low due to elo being in thousands honesly still probably too large likely need .0001)
     ]
     
     scaler = StandardScaler()
@@ -127,14 +126,25 @@ def def_score(df):
         defense_weights[6]  * df_scaled["tacklesForLoss"] +
         defense_weights[7]  * df_scaled["passesDeflected"] +
         defense_weights[8]  * df_scaled["qbHurries"] +
-        defense_weights[9]  * df_scaled["kickReturnTDs"]
+        defense_weights[9]  * df_scaled["kickReturnTDs"] +
+        defense_weights[10]  * df_scaled["elo_opp"]
     )
 
-    #ap_strength_add = np.where(df_scaled["ap_rank"] != 0, defense_weights[14] * df_scaled["ap_strength_opp"], 0)
-    #df_scaled["def_score"] = def_score + ap_strength_add
     df_scaled["def_score"] = def_score
 
     return df_scaled["def_score"]
+
+def rolling_aggs(df, rolling_cols):
+    
+    for col in rolling_cols:
+        df[f"{col}_rolling_avg"] = (
+            df.groupby("team")[col]
+            .rolling(window=3)
+            .mean()
+            .reset_index(level=0, drop=True)
+        )
+
+    return df
 
 if __name__ == "__main__":
     games_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv")
@@ -151,9 +161,7 @@ if __name__ == "__main__":
     combined_data = pd.merge(combined_data, elo_dat, left_on = ["team", "week"], right_on = ["team", "week"], how = "left")
     combined_data = possesion_time_clean(combined_data)
 
-    #wrong spot prolly once opp team elo is factored (or ap_strength_opp)
-    combined_data["off_score"] = off_score(combined_data)
-    combined_data["def_score"] = def_score(combined_data)
+    #Where off and def scores used to be
 
     rolling_cols = ['completionAttempts', 'defensiveTDs', 'firstDowns', 'fourthDownEff', 
                 'fumblesLost', 'fumblesRecovered', 'interceptionTDs', 
@@ -164,23 +172,18 @@ if __name__ == "__main__":
                 'rushingAttempts', 'rushingTDs', 'rushingYards', 'sacks',
                 'tackles', 'tacklesForLoss', 'thirdDownEff', 'totalFumbles', 
                 'totalPenaltiesYards', 'totalYards','turnovers', 'yardsPerPass', 
-                'yardsPerRushAttempt', "off_score", "def_score"]
+                'yardsPerRushAttempt'] 
     
-    
-    for col in rolling_cols:
+    combined_data = rolling_aggs(combined_data, rolling_cols)
+    """for col in rolling_cols:
         combined_data[f"{col}_rolling_avg"] = (
             combined_data.groupby("team")[col]
             .rolling(window=3)
             .mean()
             .reset_index(level=0, drop=True)
-        )
+        )"""
         
-        combined_data[f"{col}_rolling_sum"] = (
-            combined_data.groupby("team")[col]
-            .rolling(window=3)
-            .sum()
-            .reset_index(level=0, drop=True)
-        )
+        
 
     combined_data["ap_strength"] = combined_data["ap_strength"].fillna(0)
     combined_data["ap_rank"] = combined_data["ap_rank"].fillna(0)
@@ -195,10 +198,22 @@ if __name__ == "__main__":
         .transform(lambda x: x.rolling(window=3, min_periods=1).mean())
     )
 
-    combined_data["points_scored_against_rolling_sum"] = (
-        combined_data.groupby("team")["points_opp"]
-        .transform(lambda x: x.rolling(window=3, min_periods=1).sum())
-    )
+    #I am still not sure if this is the best spot for this
+    #needed to be post self merge for elo_opp so going to have to do another rolling aggregation for off and def score going to throw elo in here too
+    combined_data["off_score"] = off_score(combined_data)
+    combined_data["def_score"] = def_score(combined_data)
+
+    rolling_cols_no_drop = ["off_score", "def_score", "elo"]
+
+    combined_data = rolling_aggs(combined_data, rolling_cols_no_drop)
+    """for col in rolling_cols_no_drop:
+        combined_data[f"{col}_rolling_avg"] = (
+            combined_data.groupby("team")[col]
+            .rolling(window=3)
+            .mean()
+            .reset_index(level=0, drop=True)
+        )"""
+
 
     combined_data = combined_data.dropna()
     point = combined_data["points"]
