@@ -139,13 +139,16 @@ def def_score(df):
 if __name__ == "__main__":
     games_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv")
     ap_poll_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_ap_poll_data.csv")
+    elo_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_elo_data.csv")
 
     games_dat = clean_game_dat(games_dat)
 
+    #kinda usless with introduction of elo
     ap_poll_dat["ap_strength"] = ap_strength_bonus(ap_poll_dat["ap_rank"])
     ap_poll_dat = clean_ap_poll(ap_poll_dat)
 
     combined_data = pd.merge(games_dat, ap_poll_dat, left_on = ["team", "week"], right_on = ["team", "week"], how = "left")
+    combined_data = pd.merge(combined_data, elo_dat, left_on = ["team", "week"], right_on = ["team", "week"], how = "left")
     combined_data = possesion_time_clean(combined_data)
 
     #wrong spot prolly once opp team elo is factored (or ap_strength_opp)
@@ -208,7 +211,7 @@ if __name__ == "__main__":
     combined_data = bin_win_loss(combined_data)
     #combined_data["off_score"] = comp_off_score(combined_data)
 
-    combined_data.to_csv("../CFB_predictions_take_2/pre_calc_data/combined_data.csv", index=False, encoding="utf-8")
+    combined_data.to_csv("../CFB_predictions_take_2/post_calc_data/combined_data.csv", index=False, encoding="utf-8")
 
     # sum_opp_cols = [col for col in combined_data.columns if "_sum_opp" in col]
     # avg_opp_cols = [col for col in combined_data.columns if "_avg_opp" in col]

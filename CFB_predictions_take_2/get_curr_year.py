@@ -109,6 +109,22 @@ def get_ap_poll(api_instance, week, year = CURR_YEAR):
 
     return df
 
+def get_elo(api_instance, week, year = CURR_YEAR):
+    elo = api_instance.get_elo(year = year, week = week)
+
+    data = []
+    for team in elo:
+        data.append({
+            "team": team.team,
+            "conference": team.conference,
+            "elo": team.elo
+        })
+
+    df = pd.DataFrame(data)
+    df["week"] = week
+
+    return df
+
 if __name__ == "__main__":
     configuration = config()
     week_num = 11
@@ -117,12 +133,21 @@ if __name__ == "__main__":
         api_client.default_headers["Authorization"] = f"Bearer {configuration.api_key['authorization']}"
         api_instance_games = cfbd.GamesApi(api_client)
         api_instance_rankings = cfbd.RankingsApi(api_client)
+        api_instance_elo = cfbd.RatingsApi(api_client)
 
         team_game = pd.DataFrame()
+        ap_poll_df = pd.DataFrame()
+        elo_df = pd.DataFrame()
 
         for i in range(1, week_num):
             hold = team_stats_by_game(api_instance_games, CURR_YEAR, i)
             team_game = pd.concat([team_game, hold], ignore_index=True)
+
+            hold2 = get_ap_poll(api_instance_rankings, i, CURR_YEAR)
+            ap_poll_df = pd.concat([ap_poll_df, hold2], ignore_index=True)
+
+            hold3 = get_elo(api_instance_elo, i, CURR_YEAR)
+            elo_df = pd.concat([elo_df, hold3], ignore_index=True)
 
         team_game = label_encoder(team_game, "homeAway")
         team_game = team_game.fillna(0)
@@ -130,17 +155,13 @@ if __name__ == "__main__":
         col_list = ["completionAttempts","fourthDownEff","thirdDownEff","totalPenaltiesYards"]
         team_game = turn_dash_precentage(team_game, col_list)
 
-        ap_poll_df = pd.DataFrame()
-
-        for i in range(1, week_num):
-            hold = get_ap_poll(api_instance_rankings, i, CURR_YEAR)
-            ap_poll_df = pd.concat([ap_poll_df, hold], ignore_index=True)
-
         print(ap_poll_df.tail())
         print(team_game.head())
+        print(elo_df.tail())
 
         team_game.to_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv", index=False, encoding="utf-8")
         ap_poll_df.to_csv("../CFB_predictions_take_2/pre_calc_data/weekly_ap_poll_data.csv", index=False, encoding="utf-8")
+        elo_df.to_csv("../CFB_predictions_take_2/pre_calc_data/weekly_elo_data.csv", index=False, encoding="utf-8")
 
 
 
