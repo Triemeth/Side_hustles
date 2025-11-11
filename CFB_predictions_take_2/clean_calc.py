@@ -148,17 +148,11 @@ def rolling_aggs(df, rolling_cols):
 
 if __name__ == "__main__":
     games_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv")
-    ap_poll_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_ap_poll_data.csv")
     elo_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_elo_data.csv")
 
     games_dat = clean_game_dat(games_dat)
 
-    #kinda usless with introduction of elo
-    ap_poll_dat["ap_strength"] = ap_strength_bonus(ap_poll_dat["ap_rank"])
-    ap_poll_dat = clean_ap_poll(ap_poll_dat)
-
-    combined_data = pd.merge(games_dat, ap_poll_dat, left_on = ["team", "week"], right_on = ["team", "week"], how = "left")
-    combined_data = pd.merge(combined_data, elo_dat, left_on = ["team", "week"], right_on = ["team", "week"], how = "left")
+    combined_data = pd.merge(games_dat, elo_dat, left_on = ["team", "week"], right_on = ["team", "week"], how = "left")
     combined_data = possesion_time_clean(combined_data)
 
     #Where off and def scores used to be
@@ -175,9 +169,6 @@ if __name__ == "__main__":
                 'yardsPerRushAttempt'] 
     
     combined_data = rolling_aggs(combined_data, rolling_cols)
-
-    combined_data["ap_strength"] = combined_data["ap_strength"].fillna(0)
-    combined_data["ap_rank"] = combined_data["ap_rank"].fillna(0)
 
     combined_data = combined_data.merge(combined_data, left_on = ["gameId", "team"], right_on = ["gameId", "team_opp"], suffixes = ("", "_opp"))
 
