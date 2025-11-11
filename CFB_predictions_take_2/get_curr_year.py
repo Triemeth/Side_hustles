@@ -119,8 +119,8 @@ if __name__ == "__main__":
             hold = team_stats_by_game(api_instance_games, CURR_YEAR, i)
             team_game = pd.concat([team_game, hold], ignore_index=True)
 
-            hold3 = get_elo(api_instance_elo, i, CURR_YEAR)
-            elo_df = pd.concat([elo_df, hold3], ignore_index=True)
+            hold2 = get_elo(api_instance_elo, i, CURR_YEAR)
+            elo_df = pd.concat([elo_df, hold2], ignore_index=True)
 
         team_game = label_encoder(team_game, "homeAway")
         team_game = team_game.fillna(0)

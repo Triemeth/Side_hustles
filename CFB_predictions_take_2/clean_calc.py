@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
+from datetime import datetime
 from sklearn.preprocessing import StandardScaler
+
+CURR_YEAR = datetime.now().year
 
 def ap_strength_bonus(rank):
     return (26 - rank) / 25 
@@ -134,25 +137,35 @@ def def_score(df):
 
     return df_scaled["def_score"]
 
-def rolling_aggs(df, rolling_cols):
-    
-    for col in rolling_cols:
-        df[f"{col}_rolling_avg"] = (
+def rolling_aggs(df, cols):
+    df = df.sort_values(["team", "date"]).reset_index(drop=True)
+
+    for col in cols:
+        rolled = (
             df.groupby("team")[col]
-            .rolling(window=3)
-            .mean()
-            .reset_index(level=0, drop=True)
+              .rolling(window=3, min_periods=1)
+              .mean()
+              .reset_index(level=0, drop=True)
         )
+        df[f"{col}_rolling_avg"] = rolled
 
     return df
 
 if __name__ == "__main__":
-    games_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv")
-    elo_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_elo_data.csv")
+    curr_games_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv")
+    curr_elo_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_elo_data.csv")
+    past_games_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/past_years_weekly_game_data.csv")
+    past_elo_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/past_years_weekly_elo_data.csv")
 
-    games_dat = clean_game_dat(games_dat)
+    curr_games_dat = clean_game_dat(curr_games_dat)
+    past_games_dat = clean_game_dat(past_games_dat)
 
-    combined_data = pd.merge(games_dat, elo_dat, left_on = ["team", "week"], right_on = ["team", "week"], how = "left")
+    combined_data_curr = pd.merge(curr_games_dat, curr_elo_dat, left_on = ["team", "week"], right_on = ["team", "week"], how = "left")
+    combined_data_curr["Year"] = CURR_YEAR
+
+    combined_data_past = pd.merge(past_games_dat, past_elo_dat, left_on = ["team", "week", "Year"], right_on = ["team", "week", "Year"], how = "left")
+
+    combined_data = pd.concat([combined_data_past, combined_data_curr], ignore_index=True)
     combined_data = possesion_time_clean(combined_data)
 
     #Where off and def scores used to be
@@ -170,7 +183,7 @@ if __name__ == "__main__":
     
     combined_data = rolling_aggs(combined_data, rolling_cols)
 
-    combined_data = combined_data.merge(combined_data, left_on = ["gameId", "team"], right_on = ["gameId", "team_opp"], suffixes = ("", "_opp"))
+    combined_data = combined_data.merge(combined_data, left_on = ["gameId", "team", "Year"], right_on = ["gameId", "team_opp", "Year"], suffixes = ("", "_opp"))
 
     combined_data = combined_data.sort_values(["team", "week"]).copy()
     combined_data["points_opp"] = pd.to_numeric(combined_data["points_opp"], errors="coerce").fillna(0)

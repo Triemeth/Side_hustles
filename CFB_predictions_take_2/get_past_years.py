@@ -6,6 +6,7 @@ import numpy as np
 from datetime import datetime
 from pathlib import Path
 from sklearn.preprocessing import LabelEncoder
+import gc
 
 import get_curr_year
 
@@ -22,19 +23,32 @@ if __name__ == "__main__":
         api_instance_elo = cfbd.RatingsApi(api_client)
 
         team_game = pd.DataFrame()
-        ap_poll_df = pd.DataFrame()
         elo_df = pd.DataFrame()
 
-        for year in year_list:
-            for i in range(1, week_num):
-                hold = get_curr_year.team_stats_by_game(api_instance_games, year, i)
-                team_game = pd.concat([team_game, hold], ignore_index=True)
 
-                hold3 = get_curr_year.get_elo(api_instance_elo, i, year)
-                elo_df = pd.concat([elo_df, hold3], ignore_index=True)
+        for year in year_list:
+
+            team_game_year_hold = pd.DataFrame()
+            elo_df_year_hold = pd.DataFrame()
+        
+            for i in range(1, week_num):
+                
+                hold = get_curr_year.team_stats_by_game(api_instance_games, year, i)
+                team_game_year_hold = pd.concat([team_game_year_hold, hold], ignore_index=True)
+
+                hold2 = get_curr_year.get_elo(api_instance_elo, i, year)
+                elo_df_year_hold = pd.concat([elo_df_year_hold, hold2], ignore_index=True)
             
-            team_game["Year"] = year
-            elo_df["Year"] = year
+            team_game_year_hold["Year"] = year
+            elo_df_year_hold["Year"] = year
+
+            team_game = pd.concat([team_game, team_game_year_hold], ignore_index=True)
+            elo_df = pd.concat([elo_df, elo_df_year_hold], ignore_index=True)
+
+            del team_game_year_hold
+            del elo_df_year_hold
+
+            gc.collect()
 
         team_game = get_curr_year.label_encoder(team_game, "homeAway")
         team_game = team_game.fillna(0)
