@@ -60,7 +60,7 @@ def off_score(df):
         -0.05,  # sacks (bad)
         -0.12,  # turnovers (very bad)
         -0.08,  # totalPenaltiesYards (bad)
-        0.01    # ELO (this is so low due to elo being in thousands honesly still probably too large likely need .0001)
+        0.05    # ELO (this is so low due to elo being in thousands honesly still probably too large likely need .0001)
     ]
 
     scaler = StandardScaler()
@@ -108,7 +108,7 @@ def def_score(df):
         0.08,   # passesDeflected (pass disruption)
         0.07,   # qbHurries (pressure indicator)
         0.03,   # kickReturnTDs (rare boost)
-        0.01    # ELO (this is so low due to elo being in thousands honesly still probably too large likely need .0001)
+        0.05    # ELO (this is so low due to elo being in thousands honesly still probably too large likely need .0001)
     ]
     
     scaler = StandardScaler()
@@ -175,15 +175,6 @@ if __name__ == "__main__":
                 'yardsPerRushAttempt'] 
     
     combined_data = rolling_aggs(combined_data, rolling_cols)
-    """for col in rolling_cols:
-        combined_data[f"{col}_rolling_avg"] = (
-            combined_data.groupby("team")[col]
-            .rolling(window=3)
-            .mean()
-            .reset_index(level=0, drop=True)
-        )"""
-        
-        
 
     combined_data["ap_strength"] = combined_data["ap_strength"].fillna(0)
     combined_data["ap_rank"] = combined_data["ap_rank"].fillna(0)
@@ -204,16 +195,7 @@ if __name__ == "__main__":
     combined_data["def_score"] = def_score(combined_data)
 
     rolling_cols_no_drop = ["off_score", "def_score", "elo"]
-
     combined_data = rolling_aggs(combined_data, rolling_cols_no_drop)
-    """for col in rolling_cols_no_drop:
-        combined_data[f"{col}_rolling_avg"] = (
-            combined_data.groupby("team")[col]
-            .rolling(window=3)
-            .mean()
-            .reset_index(level=0, drop=True)
-        )"""
-
 
     combined_data = combined_data.dropna()
     point = combined_data["points"]
@@ -224,11 +206,6 @@ if __name__ == "__main__":
     combined_data = combined_data.drop(columns = cols_to_drop, axis = 1)
 
     combined_data = bin_win_loss(combined_data)
-    #combined_data["off_score"] = comp_off_score(combined_data)
 
     combined_data.to_csv("../CFB_predictions_take_2/post_calc_data/combined_data.csv", index=False, encoding="utf-8")
 
-    # sum_opp_cols = [col for col in combined_data.columns if "_sum_opp" in col]
-    # avg_opp_cols = [col for col in combined_data.columns if "_avg_opp" in col]
-    # sum_cols = [col for col in combined_data.columns if "_sum" in col]
-    # avg_cols = [col for col in combined_data.columns if "_avg" in col]
