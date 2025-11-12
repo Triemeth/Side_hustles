@@ -157,11 +157,12 @@ if __name__ == "__main__":
     past_games_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/past_years_weekly_game_data.csv")
     past_elo_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/past_years_weekly_elo_data.csv")
 
+    curr_games_dat["Year"] = CURR_YEAR
+
     curr_games_dat = clean_game_dat(curr_games_dat)
     past_games_dat = clean_game_dat(past_games_dat)
 
     combined_data_curr = pd.merge(curr_games_dat, curr_elo_dat, left_on = ["team", "week"], right_on = ["team", "week"], how = "left")
-    combined_data_curr["Year"] = CURR_YEAR
 
     combined_data_past = pd.merge(past_games_dat, past_elo_dat, left_on = ["team", "week", "Year"], right_on = ["team", "week", "Year"], how = "left")
 
@@ -211,5 +212,5 @@ if __name__ == "__main__":
 
     combined_data = bin_win_loss(combined_data)
 
-    combined_data.to_csv("../CFB_predictions_take_2/post_calc_data/combined_data.csv", index=False, encoding="utf-8")
+    #combined_data.to_csv("../CFB_predictions_take_2/post_calc_data/combined_data.csv", index=False, encoding="utf-8")
 

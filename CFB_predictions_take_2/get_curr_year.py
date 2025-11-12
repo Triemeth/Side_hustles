@@ -105,7 +105,7 @@ def get_elo(api_instance, week, year = CURR_YEAR):
 
 if __name__ == "__main__":
     configuration = config()
-    week_num = 11
+    week_num = 14
 
     with cfbd.ApiClient(configuration) as api_client:
         api_client.default_headers["Authorization"] = f"Bearer {configuration.api_key['authorization']}"

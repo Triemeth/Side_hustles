@@ -1,10 +1,7 @@
-I BROKE CLEAN CALC WHEN ADDING THE OLD DATA TO IT NEED TO FIX ASAP BEFORE MOVING FORWARD DATA IS RUINED
-    make sure get_past_years.py data is formated exactly the same
+
 
 NEXT TIME
     ELO is added but something werid is happening in calc elo is bring score down even tho it should be increasing fix this(im leaving this be for now its confusing me why no major increase when changing elo weight) 
-    create seperate python file for getting past data so i dont need to re run ever week
-    alter clean_calc so it does past too (may want fail safe or seperate file for this calc so dont have to do it every time only should do it once a year)
     then may be finally time for the model 
 
 For data calculations need(in order):
@@ -38,21 +35,3 @@ Betting porportion formula:
 NEED TO PROBABLY DO LATER DOWN THE LINE:
     implement elo for scoring functions as of now will just use ap poll rankings
     do something like: https://blog.collegefootballdata.com/talking-tech-elo-ratings/
-
-
-
-JUST HERE INCASE I WANT TO READD
-
-#prolling getting rid of rolling sum seems usless
-        combined_data[f"{col}_rolling_sum"] = (
-            combined_data.groupby("team")[col]
-            .rolling(window=3)
-            .sum()
-            .reset_index(level=0, drop=True)
-        )
-
-#prolling getting rid of rolling sum seems usless
-    combined_data["points_scored_against_rolling_sum"] = (
-        combined_data.groupby("team")["points_opp"]
-        .transform(lambda x: x.rolling(window=3, min_periods=1).sum())
-    )
