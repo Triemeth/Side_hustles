@@ -1,4 +1,6 @@
-
+MODEL QUESTIONS
+    do i want to break it down on a school to school bases or just feed model everythinh and see what happens might just try both ngl
+    for model not on a school to school bases will need to make a new dataframe of all upcoming games with those rolling averages matching opponents
 
 NEXT TIME
     ELO is added but something werid is happening in calc elo is bring score down even tho it should be increasing fix this(im leaving this be for now its confusing me why no major increase when changing elo weight) 
