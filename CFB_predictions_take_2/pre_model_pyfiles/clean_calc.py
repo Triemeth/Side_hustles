@@ -141,13 +141,15 @@ def rolling_aggs(df, cols):
     df = df.sort_values(["team", "date"]).reset_index(drop=True)
 
     for col in cols:
-        rolled = (
+        df[f"{col}_rolling_avg"] = (
             df.groupby("team")[col]
+              .shift(1) 
               .rolling(window=3, min_periods=1)
               .mean()
-              .reset_index(level=0, drop=True)
         )
-        df[f"{col}_rolling_avg"] = rolled
+
+    #shift should not grab the current week without it scores better but think it was cheating 
+    #for col in cols: rolled = ( df.groupby("team")[col] .rolling(window=3, min_periods=1) .mean() .reset_index(level=0, drop=True) ) df[f"{col}_rolling_avg"] = rolled
 
     return df
 
@@ -207,10 +209,13 @@ if __name__ == "__main__":
     combined_data = combined_data.drop(columns = rolling_cols, axis = 1)
     combined_data["points"] = point
 
-    cols_to_drop = ["date_opp", "homeAway_opp", "team_opp", "week_opp", "team_opp_opp"]
-    combined_data = combined_data.drop(columns = cols_to_drop, axis = 1)
-
     combined_data = bin_win_loss(combined_data)
 
-    #combined_data.to_csv("../CFB_predictions_take_2/post_calc_data/combined_data.csv", index=False, encoding="utf-8")
+    more_cols_to_drop = ["date", "gameId", "team", "week", "Year", "conference",
+                    "conference_opp", "elo", "elo_opp", "possessionTimeSeconds_opp", 
+                    "points", "points_opp", "off_score", "def_score", "date_opp", 
+                    "homeAway_opp", "team_opp", "week_opp", "team_opp_opp"]
+    combined_data = combined_data.drop(columns = more_cols_to_drop, axis = 0)
+
+    combined_data.to_csv("../CFB_predictions_take_2/post_calc_data/combined_data.csv", index=False, encoding="utf-8")
 
