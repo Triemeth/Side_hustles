@@ -3,7 +3,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
-from sklearn.preprocessing import MaxAbsScaler
+from sklearn.preprocessing import MaxAbsScaler, StandardScaler
 import matplotlib.pyplot as plt
 from sklearn.metrics import (accuracy_score,precision_score, 
                              recall_score, confusion_matrix,
@@ -32,41 +32,10 @@ def metrics(y_test, preds, y_pred_proba):
 
     return conf_matrix, fpr, tpr, roc_auc
 
-if __name__ == "__main__":
-    df = pd.read_csv("../CFB_predictions_take_2/post_calc_data/combined_data.csv")
-
-    y = df["Win?"]
-    X = df.drop(columns = "Win?", axis = 0)
-
-    scaler = MaxAbsScaler()
-    X = scaler.fit_transform(X)
-    
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=23, stratify=y
-    )
-
-    xgb = XGBClassifier(
-        objective='binary:logistic',
-        eval_metric='logloss',
-        n_jobs=-1,              
-        tree_method="hist",
-        subsample = .9,
-        n_estimators = 600,
-        min_child_weight = 1,
-        max_depth = 3,
-        learning_rate = .05,
-        colsample_bytree = .6
-    )
-
-    xgb.fit(X_train, y_train)
-    preds = xgb.predict(X_test)
-    y_pred_proba = xgb.predict_proba(X_test)[:, 1]
-
-    conf_matrix, fpr, tpr, roc_auc = metrics(y_test, preds, y_pred_proba)
-
+def plot_ROCAUC_confusion_matrix(conf_matrix, fpr, tpr, roc_auc, num):
     cm_display = ConfusionMatrixDisplay(confusion_matrix = conf_matrix, display_labels = [0, 1])
     cm_display.plot()
-    plt.savefig("../CFB_predictions_take_2/preformance_pics/confusion_matrix_XGB_chcek.jpg")
+    plt.savefig(f"../CFB_predictions_take_2/preformance_pics/confusion_matrix_XGB_chcek{num}.jpg")
     plt.show()
 
     plt.figure(figsize=(8, 6))
@@ -79,5 +48,71 @@ if __name__ == "__main__":
     plt.title('Receiver Operating Characteristic (ROC) Curve')
     plt.legend(loc='lower right')
     plt.grid(True)
-    plt.savefig("../CFB_predictions_take_2/preformance_pics/roc_auc_XGB_chcek.jpg")
+    plt.savefig(f"../CFB_predictions_take_2/preformance_pics/roc_auc_XGB_chcek{num}.jpg")
     plt.show()
+
+if __name__ == "__main__":
+    df = pd.read_csv("../CFB_predictions_take_2/post_calc_data/combined_data.csv")
+
+    y = df["Win?"]
+    X = df.drop(columns = "Win?", axis = 0)
+
+    #FIRST MODEL    
+    scaler = MaxAbsScaler()
+    X1 = scaler.fit_transform(X)
+    
+    X_train1, X_test1, y_train1, y_test1 = train_test_split(
+        X1, y, test_size=0.2, random_state=23, stratify=y
+    )
+
+    xgb1 = XGBClassifier(
+        objective='binary:logistic',
+        eval_metric='logloss',
+        n_jobs=-1,              
+        tree_method="hist",
+        subsample = .9,
+        n_estimators = 600,
+        min_child_weight = 1,
+        max_depth = 3,
+        learning_rate = .05,
+        colsample_bytree = .6
+    )
+
+    xgb1.fit(X_train1, y_train1)
+    preds1 = xgb1.predict(X_test1)
+    y_pred_proba1 = xgb1.predict_proba(X_test1)[:, 1]
+
+    print("MODEL 1:")
+    conf_matrix1, fpr1, tpr1, roc_auc1 = metrics(y_test1, preds1, y_pred_proba1)
+    plot_ROCAUC_confusion_matrix(conf_matrix1, fpr1, tpr1, roc_auc1, "1")
+
+    #SECOND MODEL
+    scaler2 = StandardScaler()
+    X2 = scaler2.fit_transform(X)
+    
+    X_train2, X_test2, y_train2, y_test2 = train_test_split(
+        X2, y, test_size=0.2, random_state=23, stratify=y
+    )
+
+    xgb2 = XGBClassifier(
+        objective='binary:logistic',
+        eval_metric='logloss',
+        n_jobs=-1,              
+        tree_method="hist",
+        subsample = .7,
+        n_estimators = 400,
+        min_child_weight = 3,
+        max_depth = 6,
+        learning_rate = .05,
+        colsample_bytree = 1.0
+    )
+
+    xgb2.fit(X_train2, y_train2)
+    preds2 = xgb2.predict(X_test2)
+    y_pred_proba2 = xgb2.predict_proba(X_test2)[:, 1]
+
+    print("\nMODEL 2:")
+    conf_matrix2, fpr2, tpr2, roc_auc2 = metrics(y_test2, preds2, y_pred_proba2)
+    plot_ROCAUC_confusion_matrix(conf_matrix2, fpr2, tpr2, roc_auc2, "2")
+
+    
