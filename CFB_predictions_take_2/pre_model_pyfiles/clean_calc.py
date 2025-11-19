@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime
-from sklearn.preprocessing import StandardScaler
 
 CURR_YEAR = datetime.now().year
 
@@ -66,32 +65,28 @@ def off_score(df):
         0.05    # ELO (this is so low due to elo being in thousands honesly still probably too large likely need .0001)
     ]
 
-    scaler = StandardScaler()
-    df_scaled = df.copy()
-    
-    df_scaled[offense_metrics] = scaler.fit_transform(df[offense_metrics])
 
     off_score = (
-        offense_weights[0]  * df_scaled["totalYards"] +
-        offense_weights[1]  * df_scaled["netPassingYards"] +
-        offense_weights[2]  * df_scaled["passingTDs"] +
-        offense_weights[3]  * df_scaled["rushingTDs"] +
-        offense_weights[4]  * df_scaled["yardsPerPass"] +
-        offense_weights[5]  * df_scaled["yardsPerRushAttempt"] +
-        offense_weights[6]  * df_scaled["thirdDownEff"] +
-        offense_weights[7]  * df_scaled["possessionTimeSeconds"] +
-        offense_weights[8]  * df_scaled["points"] +
-        offense_weights[9]  * df_scaled["kickingPoints"] +
-        offense_weights[10]  * df_scaled["rushingAttempts"] +
-        offense_weights[11]  * df_scaled["sacks"] +
-        offense_weights[12]  * df_scaled["turnovers"] +
-        offense_weights[13]  * df_scaled["totalPenaltiesYards"] +
-        offense_weights[14]  * df_scaled["elo_opp"]
+        offense_weights[0]  * df["totalYards"] +
+        offense_weights[1]  * df["netPassingYards"] +
+        offense_weights[2]  * df["passingTDs"] +
+        offense_weights[3]  * df["rushingTDs"] +
+        offense_weights[4]  * df["yardsPerPass"] +
+        offense_weights[5]  * df["yardsPerRushAttempt"] +
+        offense_weights[6]  * df["thirdDownEff"] +
+        offense_weights[7]  * df["possessionTimeSeconds"] +
+        offense_weights[8]  * df["points"] +
+        offense_weights[9]  * df["kickingPoints"] +
+        offense_weights[10]  * df["rushingAttempts"] +
+        offense_weights[11]  * df["sacks"] +
+        offense_weights[12]  * df["turnovers"] +
+        offense_weights[13]  * df["totalPenaltiesYards"] +
+        offense_weights[14]  * df["elo_opp"]
     )
     
-    df_scaled["off_score"] = off_score
+    df["off_score"] = off_score
 
-    return df_scaled["off_score"]
+    return df["off_score"]
 
 def def_score(df):
 
@@ -114,28 +109,23 @@ def def_score(df):
         0.05    # ELO (this is so low due to elo being in thousands honesly still probably too large likely need .0001)
     ]
     
-    scaler = StandardScaler()
-    df_scaled = df.copy()
-
-    df_scaled[defense_metrics] = scaler.fit_transform(df_scaled[defense_metrics])
-
     def_score = (
-        defense_weights[0]  * df_scaled["defensiveTDs"] +
-        defense_weights[1]  * df_scaled["interceptions"] +
-        defense_weights[2]  * df_scaled["interceptionYards"] +
-        defense_weights[3]  * df_scaled["fumblesRecovered"] +
-        defense_weights[4]  * df_scaled["sacks"] +
-        defense_weights[5]  * df_scaled["tackles"] +
-        defense_weights[6]  * df_scaled["tacklesForLoss"] +
-        defense_weights[7]  * df_scaled["passesDeflected"] +
-        defense_weights[8]  * df_scaled["qbHurries"] +
-        defense_weights[9]  * df_scaled["kickReturnTDs"] +
-        defense_weights[10]  * df_scaled["elo_opp"]
+        defense_weights[0]  * df["defensiveTDs"] +
+        defense_weights[1]  * df["interceptions"] +
+        defense_weights[2]  * df["interceptionYards"] +
+        defense_weights[3]  * df["fumblesRecovered"] +
+        defense_weights[4]  * df["sacks"] +
+        defense_weights[5]  * df["tackles"] +
+        defense_weights[6]  * df["tacklesForLoss"] +
+        defense_weights[7]  * df["passesDeflected"] +
+        defense_weights[8]  * df["qbHurries"] +
+        defense_weights[9]  * df["kickReturnTDs"] +
+        defense_weights[10]  * df["elo_opp"]
     )
 
-    df_scaled["def_score"] = def_score
+    df["def_score"] = def_score
 
-    return df_scaled["def_score"]
+    return df["def_score"]
 
 def rolling_aggs(df, cols):
     df = df.sort_values(["team", "date"]).reset_index(drop=True)
@@ -193,7 +183,7 @@ if __name__ == "__main__":
 
     combined_data["points_scored_against_rolling_avg"] = (
         combined_data.groupby("team")["points_opp"]
-        .transform(lambda x: x.rolling(window=3, min_periods=1).mean())
+        .shift(1).transform(lambda x: x.rolling(window=3, min_periods=1).mean())
     )
 
     #I am still not sure if this is the best spot for this
@@ -201,8 +191,8 @@ if __name__ == "__main__":
     combined_data["off_score"] = off_score(combined_data)
     combined_data["def_score"] = def_score(combined_data)
 
-    rolling_cols_no_drop = ["off_score", "def_score", "elo"]
-    combined_data = rolling_aggs(combined_data, rolling_cols_no_drop)
+    rolling_cols2 = ["off_score", "def_score", "elo"]
+    combined_data = rolling_aggs(combined_data, rolling_cols2)
 
     combined_data = combined_data.dropna()
     point = combined_data["points"]

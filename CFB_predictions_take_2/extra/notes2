@@ -1,7 +1,9 @@
 NEXT STEPS:
-    Run xgboost_RCV.py few times find two best models from that
+    (DONE)make sure clean_calc.py isnt screwed up
+    (DONE)Run xgboost_RCV.py few times find two best models from that
     check the best two with xgboost_check (make xgb and xgb2)
     plot confusion matrix and roc auc curve
     start on testing the ensemble with two best models and log reg
     print the likelyhood of outcome with the predicted winner as well
+    make sure clean_calc.py isnt screwed up(AGAIN)
     once done test it with the highest weeks like week 13(or whatever) data should be one week behind actual games can compaare with real scores see how it does
