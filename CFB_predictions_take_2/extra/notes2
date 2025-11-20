@@ -3,10 +3,15 @@ NEXT STEPS:
     (DONE)Run xgboost_RCV.py few times find two best models from that
     (DONE)check the best two with xgboost_check (make xgb and xgb2)
     (DONE)plot confusion matrix and roc auc curve
-    start on testing the ensemble with two best models and log reg
-    print the likelyhood of outcome with the predicted winner as well
+    (DONE)start on testing the ensemble with two best models and log reg
+    decide way to go models log reg, DNN, and SVM beat the hyper tunned xgboost model
     make sure clean_calc.py isnt screwed up(AGAIN)
+    save final model
     once done test it with the highest weeks like week 13(or whatever) data should be one week behind actual games can compaare with real scores see how it does
+    print the likelyhood of outcome with the predicted winner as well
     gonna need to pull up a list of games for the next week and merge that with the most up to date rolling averages to start making predictions
 
 NOTE: I dont know if normalization with scalers is really even doing that much
+
+uhhh base logistic regression may have just outpreformed hyper tuned xgboost model and base svm just did even better
+no signs of overfitting in xgboost model
