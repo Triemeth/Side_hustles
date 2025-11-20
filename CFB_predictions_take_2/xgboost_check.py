@@ -78,7 +78,11 @@ if __name__ == "__main__":
         colsample_bytree = .6
     )
 
-    xgb1.fit(X_train1, y_train1)
+    xgb1.fit(
+        X_train1, y_train1,
+        eval_set=[(X_train1, y_train1), (X_test1, y_test1)],
+        verbose=True
+    )    
     preds1 = xgb1.predict(X_test1)
     y_pred_proba1 = xgb1.predict_proba(X_test1)[:, 1]
 
@@ -114,5 +118,25 @@ if __name__ == "__main__":
     print("\nMODEL 2:")
     conf_matrix2, fpr2, tpr2, roc_auc2 = metrics(y_test2, preds2, y_pred_proba2)
     plot_ROCAUC_confusion_matrix(conf_matrix2, fpr2, tpr2, roc_auc2, "2")
+
+    
+    # Check for over fitting
+    print()
+    train_preds = xgb1.predict(X_train1)
+    test_preds = xgb1.predict(X_test1)
+
+    print("Train accuracy:", accuracy_score(y_train1, train_preds))
+    print("Test accuracy:", accuracy_score(y_test1, test_preds))
+
+    results = xgb1.evals_result()
+
+    train_logloss = results['validation_0']['logloss']
+    test_logloss  = results['validation_1']['logloss']
+
+    plt.plot(train_logloss, label='train')
+    plt.plot(test_logloss, label='test')
+    plt.legend()
+    plt.title("XGBoost Learning Curve")
+    plt.show()
 
     
