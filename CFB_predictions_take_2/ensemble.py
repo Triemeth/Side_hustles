@@ -8,10 +8,13 @@ from sklearn.ensemble import StackingClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
+import joblib
+
 
 
 if __name__ == "__main__":
     df = pd.read_csv("../CFB_predictions_take_2/post_calc_data/combined_data.csv")
+    df = df.drop(columns = "team", axis = 0)
 
     y = df["Win?"]
     X = df.drop(columns = "Win?", axis = 0)
@@ -47,6 +50,8 @@ if __name__ == "__main__":
 
     stacking_model.fit(X_train, y_train)
     preds = stacking_model.predict(X_test)
+
+    joblib.dump(stacking_model, "../CFB_predictions_take_2/saved_models/ensembleModel.pkl")
 
     acc = accuracy_score(y_test, preds)
     print(acc)

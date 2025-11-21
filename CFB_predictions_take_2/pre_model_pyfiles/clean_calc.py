@@ -201,7 +201,7 @@ if __name__ == "__main__":
 
     combined_data = bin_win_loss(combined_data)
 
-    more_cols_to_drop = ["date", "gameId", "team", "week", "Year", "conference",
+    more_cols_to_drop = ["date", "gameId", "week", "Year", "conference",
                     "conference_opp", "elo", "elo_opp", "possessionTimeSeconds_opp", 
                     "points", "points_opp", "off_score", "def_score", "date_opp", 
                     "homeAway_opp", "team_opp", "week_opp", "team_opp_opp"]
