@@ -48,7 +48,8 @@ def dnn_log(input_shape, X_train, X_test, y_train, y_test):
 
 if __name__ == "__main__":
     df = pd.read_csv("../CFB_predictions_take_2/post_calc_data/combined_data.csv")
-    df = df.drop(columns = "team", axis = 0)
+    drop_cols = ["week", "Year", "team"]
+    df = df.drop(columns = drop_cols, axis = 0)
 
     y = df["Win?"]
     X = df.drop(columns = "Win?", axis = 0)

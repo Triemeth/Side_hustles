@@ -6,9 +6,13 @@ NEXT STEPS:
     (DONE)start on testing the ensemble with two best models and log reg
     *** (COME BACK TOO) decide way to go models log reg, DNN, and SVM beat the hyper tunned xgboost model
     *** (COME BACK TOO) make sure clean_calc.py isnt screwed up(AGAIN)
-    save final model
-    once done test it with the highest weeks like week 13(or whatever) data should be one week behind actual games can compaare with real scores see how it does
-    print the likelyhood of outcome with the predicted winner as well
+    (DONE) save final model
+    (CURRENT)once done test it with the highest weeks like week 13(or whatever) data should be one week behind actual games can compaare with real 
+    scores see how it does
+        currently cant figure out the append not working load_run_model.py
+    (DONE) print the likelyhood of outcome with the predicted winner as well
+    *** (COME BACK TOO) need to add the most recent games data before making predictions
+        week 10 right now for example has data for weeks 9,8,7 but predicting for week 11 no week 10 data is there
     gonna need to pull up a list of games for the next week and merge that with the most up to date rolling averages to start making predictions
 
 NOTE: I dont know if normalization with scalers is really even doing that much
