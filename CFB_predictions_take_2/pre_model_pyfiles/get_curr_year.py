@@ -10,7 +10,7 @@ from sklearn.preprocessing import LabelEncoder
 CURR_YEAR = datetime.now().year
 
 def config():
-    env_path = Path(__file__).parent / ".env"
+    env_path = Path(__file__).resolve().parent.parent / ".env"
     load_dotenv(dotenv_path=env_path)
 
     api_key = os.getenv("CFBD_API_KEY")
@@ -26,6 +26,7 @@ def config():
     configuration.api_key_prefix["authorization"] = "Bearer"
 
     return configuration
+
 
 def label_encoder(df, col_name):
     le = LabelEncoder()

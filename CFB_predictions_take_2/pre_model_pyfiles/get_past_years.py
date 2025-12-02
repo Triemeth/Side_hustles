@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from sklearn.preprocessing import LabelEncoder
 import gc
+import time
 
 import get_curr_year
 
@@ -49,6 +50,7 @@ if __name__ == "__main__":
             del elo_df_year_hold
 
             gc.collect()
+            time.sleep(1)
 
         team_game = get_curr_year.label_encoder(team_game, "homeAway")
         team_game = team_game.fillna(0)

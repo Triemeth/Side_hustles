@@ -1397,7 +1397,7 @@ Georgia,SEC,2018,11
 Georgia Southern,Sun Belt,1314,11
 Georgia State,Sun Belt,1098,11
 Georgia Tech,ACC,1612,11
-Hawai'i,Mountain West,1459,11
+Hawai'i,Mountain West,1480,11
 Houston,Big 12,1476,11
 Illinois,Big Ten,1603,11
 Indiana,Big Ten,2150,11
@@ -1453,13 +1453,13 @@ Purdue,Big Ten,1331,11
 Rice,American Athletic,1169,11
 Rutgers,Big Ten,1458,11
 Sam Houston,Conference USA,1072,11
-San Diego State,Mountain West,1501,11
+San Diego State,Mountain West,1480,11
 San José State,Mountain West,1391,11
 SMU,ACC,1782,11
 South Alabama,Sun Belt,1375,11
 South Carolina,SEC,1637,11
 Southern Miss,Sun Belt,1362,11
-South Florida,American Athletic,1736,11
+South Florida,American Athletic,1734,11
 Stanford,ACC,1246,11
 Syracuse,ACC,1304,11
 TCU,Big 12,1689,11
@@ -1483,7 +1483,7 @@ USC,Big Ten,1911,11
 Utah,Big 12,1941,11
 Utah State,Mountain West,1422,11
 UTEP,Conference USA,1233,11
-UTSA,American Athletic,1463,11
+UTSA,American Athletic,1465,11
 Vanderbilt,SEC,1770,11
 Virginia,ACC,1555,11
 Virginia Tech,ACC,1431,11
@@ -1495,275 +1495,275 @@ Western Michigan,Mid-American,1368,11
 West Virginia,Big 12,1352,11
 Wisconsin,Big Ten,1459,11
 Wyoming,Mountain West,1390,11
-Air Force,Mountain West,1388,12
-Akron,Mid-American,1114,12
-Alabama,SEC,1977,12
-App State,Sun Belt,1328,12
-Arizona,Big 12,1580,12
-Arizona State,Big 12,1617,12
-Arkansas,SEC,1594,12
+Air Force,Mountain West,1383,12
+Akron,Mid-American,1087,12
+Alabama,SEC,1964,12
+App State,Sun Belt,1248,12
+Arizona,Big 12,1592,12
+Arizona State,Big 12,1614,12
+Arkansas,SEC,1596,12
 Arkansas State,Sun Belt,1306,12
 Army,American Athletic,1529,12
 Auburn,SEC,1661,12
-Ball State,Mid-American,1047,12
-Baylor,Big 12,1621,12
-Boise State,Mountain West,1616,12
-Boston College,ACC,1298,12
+Ball State,Mid-American,1030,12
+Baylor,Big 12,1585,12
+Boise State,Mountain West,1589,12
+Boston College,ACC,1311,12
 Bowling Green,Mid-American,1244,12
-Buffalo,Mid-American,1376,12
-BYU,Big 12,1688,12
+Buffalo,Mid-American,1318,12
+BYU,Big 12,1772,12
 California,ACC,1420,12
-Central Michigan,Mid-American,1235,12
-Charlotte,American Athletic,1020,12
-Cincinnati,Big 12,1590,12
+Central Michigan,Mid-American,1293,12
+Charlotte,American Athletic,1013,12
+Cincinnati,Big 12,1578,12
 Clemson,ACC,1725,12
-Coastal Carolina,Sun Belt,1318,12
+Coastal Carolina,Sun Belt,1313,12
 Colorado,Big 12,1377,12
-Colorado State,Mountain West,1221,12
-Delaware,Conference USA,1386,12
-Duke,ACC,1625,12
-East Carolina,American Athletic,1599,12
-Eastern Michigan,Mid-American,1229,12
-Florida,SEC,1555,12
-Florida Atlantic,American Athletic,1247,12
-Florida International,Conference USA,1306,12
-Florida State,ACC,1609,12
-Fresno State,Mountain West,1468,12
-Georgia,SEC,2018,12
-Georgia Southern,Sun Belt,1314,12
-Georgia State,Sun Belt,1098,12
-Georgia Tech,ACC,1612,12
-Hawai'i,Mountain West,1459,12
+Colorado State,Mountain West,1223,12
+Delaware,Conference USA,1364,12
+Duke,ACC,1576,12
+East Carolina,American Athletic,1604,12
+Eastern Michigan,Mid-American,1246,12
+Florida,SEC,1565,12
+Florida Atlantic,American Athletic,1249,12
+Florida International,Conference USA,1326,12
+Florida State,ACC,1638,12
+Fresno State,Mountain West,1510,12
+Georgia,SEC,2070,12
+Georgia Southern,Sun Belt,1319,12
+Georgia State,Sun Belt,1107,12
+Georgia Tech,ACC,1599,12
+Hawai'i,Mountain West,1480,12
 Houston,Big 12,1476,12
-Illinois,Big Ten,1603,12
-Indiana,Big Ten,2150,12
-Iowa,Big Ten,1912,12
+Illinois,Big Ten,1630,12
+Indiana,Big Ten,2142,12
+Iowa,Big Ten,1907,12
 Iowa State,Big 12,1600,12
-Jacksonville State,Conference USA,1512,12
-James Madison,Sun Belt,1802,12
+Jacksonville State,Conference USA,1518,12
+James Madison,Sun Belt,1882,12
 Kansas,Big 12,1554,12
-Kansas State,Big 12,1705,12
-Kennesaw State,Conference USA,1381,12
-Kent State,Mid-American,945,12
-Kentucky,SEC,1635,12
-Liberty,Conference USA,1488,12
+Kansas State,Big 12,1674,12
+Kennesaw State,Conference USA,1375,12
+Kent State,Mid-American,972,12
+Kentucky,SEC,1622,12
+Liberty,Conference USA,1468,12
 Louisiana,Sun Belt,1350,12
-Louisiana Tech,Conference USA,1462,12
+Louisiana Tech,Conference USA,1396,12
 Louisville,ACC,1709,12
-LSU,SEC,1695,12
-Marshall,Sun Belt,1508,12
-Maryland,Big Ten,1467,12
-Massachusetts,Mid-American,805,12
-Memphis,American Athletic,1665,12
-Miami,ACC,1865,12
-Miami (OH),Mid-American,1460,12
-Michigan,Big Ten,1809,12
-Michigan State,Big Ten,1365,12
-Middle Tennessee,Conference USA,1134,12
-Minnesota,Big Ten,1514,12
-Mississippi State,SEC,1523,12
-Missouri,SEC,1734,12
-Missouri State,Conference USA,1358,12
-Navy,American Athletic,1480,12
-NC State,ACC,1498,12
+LSU,SEC,1693,12
+Marshall,Sun Belt,1499,12
+Maryland,Big Ten,1440,12
+Massachusetts,Mid-American,735,12
+Memphis,American Athletic,1660,12
+Miami,ACC,1914,12
+Miami (OH),Mid-American,1421,12
+Michigan,Big Ten,1799,12
+Michigan State,Big Ten,1377,12
+Middle Tennessee,Conference USA,1122,12
+Minnesota,Big Ten,1496,12
+Mississippi State,SEC,1492,12
+Missouri,SEC,1765,12
+Missouri State,Conference USA,1376,12
+Navy,American Athletic,1485,12
+NC State,ACC,1449,12
 Nebraska,Big Ten,1648,12
-Nevada,Mountain West,1105,12
-New Mexico,Mountain West,1460,12
-New Mexico State,Conference USA,1201,12
-North Carolina,ACC,1393,12
-Northern Illinois,Mid-American,1219,12
-North Texas,American Athletic,1690,12
-Northwestern,Big Ten,1516,12
-Notre Dame,FBS Independents,2186,12
-Ohio,Mid-American,1595,12
-Ohio State,Big Ten,2125,12
-Oklahoma,SEC,1794,12
-Oklahoma State,Big 12,1049,12
-Old Dominion,Sun Belt,1480,12
-Ole Miss,SEC,1980,12
-Oregon,Big Ten,2050,12
-Oregon State,Pac-12,1232,12
-Penn State,Big Ten,1950,12
-Pittsburgh,ACC,1668,12
-Purdue,Big Ten,1331,12
+Nevada,Mountain West,1288,12
+New Mexico,Mountain West,1458,12
+New Mexico State,Conference USA,1181,12
+North Carolina,ACC,1361,12
+Northern Illinois,Mid-American,1289,12
+North Texas,American Athletic,1716,12
+Northwestern,Big Ten,1526,12
+Notre Dame,FBS Independents,2189,12
+Ohio,Mid-American,1585,12
+Ohio State,Big Ten,2145,12
+Oklahoma,SEC,1807,12
+Oklahoma State,Big 12,1080,12
+Old Dominion,Sun Belt,1566,12
+Ole Miss,SEC,1959,12
+Oregon,Big Ten,2068,12
+Oregon State,Pac-12,1175,12
+Penn State,Big Ten,1938,12
+Pittsburgh,ACC,1665,12
+Purdue,Big Ten,1276,12
 Rice,American Athletic,1169,12
 Rutgers,Big Ten,1458,12
-Sam Houston,Conference USA,1072,12
-San Diego State,Mountain West,1501,12
-San José State,Mountain West,1391,12
+Sam Houston,Conference USA,1094,12
+San Diego State,Mountain West,1507,12
+San José State,Mountain West,1208,12
 SMU,ACC,1782,12
-South Alabama,Sun Belt,1375,12
-South Carolina,SEC,1637,12
-Southern Miss,Sun Belt,1362,12
-South Florida,American Athletic,1736,12
+South Alabama,Sun Belt,1369,12
+South Carolina,SEC,1645,12
+Southern Miss,Sun Belt,1303,12
+South Florida,American Athletic,1729,12
 Stanford,ACC,1246,12
 Syracuse,ACC,1304,12
-TCU,Big 12,1689,12
+TCU,Big 12,1605,12
 Temple,American Athletic,1266,12
-Tennessee,SEC,1814,12
-Texas,SEC,1924,12
-Texas A&M,SEC,1904,12
-Texas State,Sun Belt,1483,12
-Texas Tech,Big 12,1937,12
-Toledo,Mid-American,1591,12
-Troy,Sun Belt,1445,12
-Tulane,American Athletic,1545,12
-Tulsa,American Athletic,1037,12
-UAB,American Athletic,1223,12
-UCF,Big 12,1528,12
-UCLA,Big Ten,1381,12
-UConn,FBS Independents,1563,12
-UL Monroe,Sun Belt,998,12
-UNLV,Mountain West,1605,12
-USC,Big Ten,1911,12
-Utah,Big 12,1941,12
-Utah State,Mountain West,1422,12
-UTEP,Conference USA,1233,12
-UTSA,American Athletic,1463,12
+Tennessee,SEC,1834,12
+Texas,SEC,1872,12
+Texas A&M,SEC,1896,12
+Texas State,Sun Belt,1542,12
+Texas Tech,Big 12,1997,12
+Toledo,Mid-American,1630,12
+Troy,Sun Belt,1359,12
+Tulane,American Athletic,1543,12
+Tulsa,American Athletic,1094,12
+UAB,American Athletic,1197,12
+UCF,Big 12,1468,12
+UCLA,Big Ten,1361,12
+UConn,FBS Independents,1568,12
+UL Monroe,Sun Belt,1004,12
+UNLV,Mountain West,1604,12
+USC,Big Ten,1916,12
+Utah,Big 12,1977,12
+Utah State,Mountain West,1423,12
+UTEP,Conference USA,1215,12
+UTSA,American Athletic,1472,12
 Vanderbilt,SEC,1770,12
-Virginia,ACC,1555,12
-Virginia Tech,ACC,1431,12
-Wake Forest,ACC,1412,12
-Washington,Big Ten,1699,12
-Washington State,Pac-12,1434,12
-Western Kentucky,Conference USA,1386,12
-Western Michigan,Mid-American,1368,12
-West Virginia,Big 12,1352,12
-Wisconsin,Big Ten,1459,12
-Wyoming,Mountain West,1390,12
-Air Force,Mountain West,1388,13
-Akron,Mid-American,1114,13
-Alabama,SEC,1977,13
-App State,Sun Belt,1328,13
-Arizona,Big 12,1580,13
-Arizona State,Big 12,1617,13
-Arkansas,SEC,1594,13
-Arkansas State,Sun Belt,1306,13
-Army,American Athletic,1529,13
-Auburn,SEC,1661,13
-Ball State,Mid-American,1047,13
-Baylor,Big 12,1621,13
-Boise State,Mountain West,1616,13
-Boston College,ACC,1298,13
-Bowling Green,Mid-American,1244,13
-Buffalo,Mid-American,1376,13
-BYU,Big 12,1688,13
-California,ACC,1420,13
-Central Michigan,Mid-American,1235,13
-Charlotte,American Athletic,1020,13
-Cincinnati,Big 12,1590,13
-Clemson,ACC,1725,13
-Coastal Carolina,Sun Belt,1318,13
-Colorado,Big 12,1377,13
-Colorado State,Mountain West,1221,13
-Delaware,Conference USA,1386,13
-Duke,ACC,1625,13
-East Carolina,American Athletic,1599,13
-Eastern Michigan,Mid-American,1229,13
-Florida,SEC,1555,13
-Florida Atlantic,American Athletic,1247,13
-Florida International,Conference USA,1306,13
-Florida State,ACC,1609,13
-Fresno State,Mountain West,1468,13
-Georgia,SEC,2018,13
-Georgia Southern,Sun Belt,1314,13
-Georgia State,Sun Belt,1098,13
-Georgia Tech,ACC,1612,13
-Hawai'i,Mountain West,1459,13
-Houston,Big 12,1476,13
-Illinois,Big Ten,1603,13
-Indiana,Big Ten,2150,13
-Iowa,Big Ten,1912,13
-Iowa State,Big 12,1600,13
-Jacksonville State,Conference USA,1512,13
-James Madison,Sun Belt,1802,13
-Kansas,Big 12,1554,13
-Kansas State,Big 12,1705,13
-Kennesaw State,Conference USA,1381,13
-Kent State,Mid-American,945,13
-Kentucky,SEC,1635,13
-Liberty,Conference USA,1488,13
-Louisiana,Sun Belt,1350,13
-Louisiana Tech,Conference USA,1462,13
-Louisville,ACC,1709,13
-LSU,SEC,1695,13
-Marshall,Sun Belt,1508,13
-Maryland,Big Ten,1467,13
-Massachusetts,Mid-American,805,13
-Memphis,American Athletic,1665,13
-Miami,ACC,1865,13
-Miami (OH),Mid-American,1460,13
-Michigan,Big Ten,1809,13
-Michigan State,Big Ten,1365,13
-Middle Tennessee,Conference USA,1134,13
-Minnesota,Big Ten,1514,13
-Mississippi State,SEC,1523,13
-Missouri,SEC,1734,13
-Missouri State,Conference USA,1358,13
-Navy,American Athletic,1480,13
-NC State,ACC,1498,13
-Nebraska,Big Ten,1648,13
-Nevada,Mountain West,1105,13
-New Mexico,Mountain West,1460,13
-New Mexico State,Conference USA,1201,13
-North Carolina,ACC,1393,13
-Northern Illinois,Mid-American,1219,13
-North Texas,American Athletic,1690,13
-Northwestern,Big Ten,1516,13
-Notre Dame,FBS Independents,2186,13
-Ohio,Mid-American,1595,13
-Ohio State,Big Ten,2125,13
-Oklahoma,SEC,1794,13
-Oklahoma State,Big 12,1049,13
-Old Dominion,Sun Belt,1480,13
-Ole Miss,SEC,1980,13
-Oregon,Big Ten,2050,13
-Oregon State,Pac-12,1232,13
-Penn State,Big Ten,1950,13
-Pittsburgh,ACC,1668,13
-Purdue,Big Ten,1331,13
-Rice,American Athletic,1169,13
-Rutgers,Big Ten,1458,13
-Sam Houston,Conference USA,1072,13
-San Diego State,Mountain West,1501,13
-San José State,Mountain West,1391,13
-SMU,ACC,1782,13
+Virginia,ACC,1604,12
+Virginia Tech,ACC,1402,12
+Wake Forest,ACC,1444,12
+Washington,Big Ten,1754,12
+Washington State,Pac-12,1500,12
+Western Kentucky,Conference USA,1398,12
+Western Michigan,Mid-American,1378,12
+West Virginia,Big 12,1355,12
+Wisconsin,Big Ten,1467,12
+Wyoming,Mountain West,1348,12
+Air Force,Mountain West,1350,13
+Akron,Mid-American,1101,13
+Alabama,SEC,1966,13
+App State,Sun Belt,1252,13
+Arizona,Big 12,1651,13
+Arizona State,Big 12,1653,13
+Arkansas,SEC,1588,13
+Arkansas State,Sun Belt,1302,13
+Army,American Athletic,1504,13
+Auburn,SEC,1660,13
+Ball State,Mid-American,1018,13
+Baylor,Big 12,1526,13
+Boise State,Mountain West,1621,13
+Boston College,ACC,1311,13
+Bowling Green,Mid-American,1230,13
+Buffalo,Mid-American,1288,13
+BYU,Big 12,1781,13
+California,ACC,1351,13
+Central Michigan,Mid-American,1291,13
+Charlotte,American Athletic,1035,13
+Cincinnati,Big 12,1569,13
+Clemson,ACC,1727,13
+Coastal Carolina,Sun Belt,1228,13
+Colorado,Big 12,1338,13
+Colorado State,Mountain West,1191,13
+Delaware,Conference USA,1266,13
+Duke,ACC,1573,13
+East Carolina,American Athletic,1491,13
+Eastern Michigan,Mid-American,1246,13
+Florida,SEC,1543,13
+Florida Atlantic,American Athletic,1263,13
+Florida International,Conference USA,1343,13
+Florida State,ACC,1606,13
+Fresno State,Mountain West,1478,13
+Georgia,SEC,2048,13
+Georgia Southern,Sun Belt,1250,13
+Georgia State,Sun Belt,1104,13
+Georgia Tech,ACC,1573,13
+Hawai'i,Mountain West,1421,13
+Houston,Big 12,1479,13
+Illinois,Big Ten,1576,13
+Indiana,Big Ten,2142,13
+Iowa,Big Ten,1902,13
+Iowa State,Big 12,1655,13
+Jacksonville State,Conference USA,1501,13
+James Madison,Sun Belt,1874,13
+Kansas,Big 12,1499,13
+Kansas State,Big 12,1680,13
+Kennesaw State,Conference USA,1385,13
+Kent State,Mid-American,974,13
+Kentucky,SEC,1578,13
+Liberty,Conference USA,1457,13
+Louisiana,Sun Belt,1354,13
+Louisiana Tech,Conference USA,1407,13
+Louisville,ACC,1631,13
+LSU,SEC,1690,13
+Marshall,Sun Belt,1495,13
+Maryland,Big Ten,1414,13
+Massachusetts,Mid-American,748,13
+Memphis,American Athletic,1660,13
+Miami,ACC,1907,13
+Miami (OH),Mid-American,1451,13
+Michigan,Big Ten,1825,13
+Michigan State,Big Ten,1382,13
+Middle Tennessee,Conference USA,1148,13
+Minnesota,Big Ten,1491,13
+Mississippi State,SEC,1492,13
+Missouri,SEC,1748,13
+Missouri State,Conference USA,1366,13
+Navy,American Athletic,1485,13
+NC State,ACC,1481,13
+Nebraska,Big Ten,1611,13
+Nevada,Mountain West,1303,13
+New Mexico,Mountain West,1491,13
+New Mexico State,Conference USA,1188,13
+North Carolina,ACC,1364,13
+Northern Illinois,Mid-American,1260,13
+North Texas,American Athletic,1741,13
+Northwestern,Big Ten,1531,13
+Notre Dame,FBS Independents,2263,13
+Ohio,Mid-American,1572,13
+Ohio State,Big Ten,2158,13
+Oklahoma,SEC,1824,13
+Oklahoma State,Big 12,1084,13
+Old Dominion,Sun Belt,1635,13
+Ole Miss,SEC,1959,13
+Oregon,Big Ten,2086,13
+Oregon State,Pac-12,1175,13
+Penn State,Big Ten,1975,13
+Pittsburgh,ACC,1691,13
+Purdue,Big Ten,1276,13
+Rice,American Athletic,1144,13
+Rutgers,Big Ten,1445,13
+Sam Houston,Conference USA,1068,13
+San Diego State,Mountain West,1530,13
+San José State,Mountain West,1185,13
+SMU,ACC,1860,13
 South Alabama,Sun Belt,1375,13
-South Carolina,SEC,1637,13
-Southern Miss,Sun Belt,1362,13
-South Florida,American Athletic,1736,13
-Stanford,ACC,1246,13
-Syracuse,ACC,1304,13
-TCU,Big 12,1689,13
-Temple,American Athletic,1266,13
-Tennessee,SEC,1814,13
-Texas,SEC,1924,13
-Texas A&M,SEC,1904,13
-Texas State,Sun Belt,1483,13
-Texas Tech,Big 12,1937,13
-Toledo,Mid-American,1591,13
-Troy,Sun Belt,1445,13
-Tulane,American Athletic,1545,13
-Tulsa,American Athletic,1037,13
-UAB,American Athletic,1223,13
-UCF,Big 12,1528,13
-UCLA,Big Ten,1381,13
-UConn,FBS Independents,1563,13
-UL Monroe,Sun Belt,998,13
-UNLV,Mountain West,1605,13
-USC,Big Ten,1911,13
-Utah,Big 12,1941,13
-Utah State,Mountain West,1422,13
-UTEP,Conference USA,1233,13
-UTSA,American Athletic,1463,13
-Vanderbilt,SEC,1770,13
-Virginia,ACC,1555,13
-Virginia Tech,ACC,1431,13
-Wake Forest,ACC,1412,13
-Washington,Big Ten,1699,13
-Washington State,Pac-12,1434,13
-Western Kentucky,Conference USA,1386,13
-Western Michigan,Mid-American,1368,13
-West Virginia,Big 12,1352,13
-Wisconsin,Big Ten,1459,13
-Wyoming,Mountain West,1390,13
+South Carolina,SEC,1730,13
+Southern Miss,Sun Belt,1297,13
+South Florida,American Athletic,1751,13
+Stanford,ACC,1315,13
+Syracuse,ACC,1230,13
+TCU,Big 12,1602,13
+Temple,American Athletic,1234,13
+Tennessee,SEC,1856,13
+Texas,SEC,1880,13
+Texas A&M,SEC,1896,13
+Texas State,Sun Belt,1533,13
+Texas Tech,Big 12,1997,13
+Toledo,Mid-American,1642,13
+Troy,Sun Belt,1362,13
+Tulane,American Athletic,1575,13
+Tulsa,American Athletic,1119,13
+UAB,American Athletic,1175,13
+UCF,Big 12,1464,13
+UCLA,Big Ten,1313,13
+UConn,FBS Independents,1554,13
+UL Monroe,Sun Belt,1013,13
+UNLV,Mountain West,1663,13
+USC,Big Ten,1898,13
+Utah,Big 12,1971,13
+Utah State,Mountain West,1455,13
+UTEP,Conference USA,1208,13
+UTSA,American Athletic,1585,13
+Vanderbilt,SEC,1827,13
+Virginia,ACC,1604,13
+Virginia Tech,ACC,1409,13
+Wake Forest,ACC,1542,13
+Washington,Big Ten,1802,13
+Washington State,Pac-12,1508,13
+Western Kentucky,Conference USA,1401,13
+Western Michigan,Mid-American,1407,13
+West Virginia,Big 12,1355,13
+Wisconsin,Big Ten,1521,13
+Wyoming,Mountain West,1333,13

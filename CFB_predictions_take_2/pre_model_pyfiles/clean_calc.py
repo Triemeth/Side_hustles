@@ -34,10 +34,6 @@ def possesion_time_clean(df):
     df = df.drop("possessionTime", axis = 1)
     return df
 
-def bin_win_loss(df):
-    df["Win?"] = np.where(df["points"] > df["points_opp"], 1, 0)
-    return df
-
 def off_score(df):
     
     offense_metrics = ["totalYards", "netPassingYards", "passingTDs",
