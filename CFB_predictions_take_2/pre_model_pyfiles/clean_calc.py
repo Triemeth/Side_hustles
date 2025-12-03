@@ -139,6 +139,10 @@ def rolling_aggs(df, cols):
 
     return df
 
+def bin_win_loss(df):   
+    df["Win?"] = np.where(df["points"] > df["points_opp"], 1, 0)
+    return df
+
 if __name__ == "__main__":
     curr_games_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv")
     curr_elo_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_elo_data.csv")
