@@ -204,7 +204,7 @@ if __name__ == "__main__":
     more_cols_to_drop = ["date", "gameId", "conference",
                     "conference_opp", "elo", "elo_opp", "possessionTimeSeconds_opp", 
                     "points", "points_opp", "off_score", "def_score", "date_opp", 
-                    "homeAway_opp", "team_opp", "week_opp", "team_opp_opp"]
+                    "homeAway_opp", "week_opp", "team_opp_opp"]
     combined_data = combined_data.drop(columns = more_cols_to_drop, axis = 0)
 
     combined_data.to_csv("../CFB_predictions_take_2/post_calc_data/combined_data.csv", index=False, encoding="utf-8")

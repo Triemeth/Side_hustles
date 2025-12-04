@@ -14,8 +14,9 @@ import joblib
 
 if __name__ == "__main__":
     df = pd.read_csv("../CFB_predictions_take_2/post_calc_data/combined_data.csv")
-    drop_cols = ["week", "Year", "team"]
+    drop_cols = ["week", "Year", "team", "team_opp", "team_opp.1"]
     df = df.drop(columns = drop_cols, axis = 0)
+
 
     y = df["Win?"]
     X = df.drop(columns = "Win?", axis = 0)

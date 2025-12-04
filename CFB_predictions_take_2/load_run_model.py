@@ -7,33 +7,32 @@ if __name__ == "__main__":
     model = joblib.load("../CFB_predictions_take_2/saved_models/ensembleModel.pkl")
     scaler = joblib.load("../CFB_predictions_take_2/saved_models/scaler.pkl")
 
-    bama = df[
+    df = df.drop(columns = "team_opp.1", axis = 0)
+
+    lsu = df[
         (df["team"] == "LSU") &
         (df["week"] == 11) &
         (df["Year"] == 2025)
     ]
 
-    lsu = df[
-        (df["team"] == "Alabama") &
+    bama = df[
+        (df["team_opp"] == "Alabama") &
         (df["week"] == 11) &
         (df["Year"] == 2025)
     ]
 
-    drop_cols = ["week", "Year", "team", "Win?"]
+    drop_cols = ["week", "Year", "team", "Win?", "team_opp"]
     lsu = lsu.drop(columns=drop_cols)
     bama = bama.drop(columns=drop_cols)
 
-    bama_team_cols = [c for c in bama.columns if not c.endswith("_opp")]
+    bama_team_cols = [c for c in bama.columns if c.endswith("_opp")]
     bama = bama[bama_team_cols]
 
     lsu_team_cols = [c for c in lsu.columns if not c.endswith("_opp")]
     lsu = lsu[lsu_team_cols]
 
-    bama_opp = bama.add_suffix("_opp")
-
-    game_row = pd.concat([lsu.reset_index(drop=True), bama_opp.reset_index(drop=True)], axis=1)
+    game_row = pd.concat([lsu.reset_index(drop=True), bama.reset_index(drop=True)], axis=1)
     game_row.to_csv("../CFB_predictions_take_2/check_data/game_row_check.csv", index=False, encoding="utf-8")
-    game_row = game_row.drop(columns = "homeAway_opp", axis = 0)
 
     col_order = pd.read_csv(
         "../CFB_predictions_take_2/post_calc_data/model_feature_columns.csv",
