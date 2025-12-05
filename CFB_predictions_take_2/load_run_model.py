@@ -10,13 +10,13 @@ if __name__ == "__main__":
     df = df.drop(columns = "team_opp.1", axis = 0)
 
     lsu = df[
-        (df["team"] == "LSU") &
+        (df["team"] == "Alabama") &
         (df["week"] == 11) &
         (df["Year"] == 2025)
     ]
 
     bama = df[
-        (df["team_opp"] == "Alabama") &
+        (df["team_opp"] == "LSU") &
         (df["week"] == 11) &
         (df["Year"] == 2025)
     ]
@@ -43,9 +43,9 @@ if __name__ == "__main__":
 
     game_row = game_row.reindex(columns=col_order, fill_value=0)
 
-    game_row_scaled = scaler.transform(game_row)
-    pred = model.predict(game_row_scaled)
-    prob = model.predict_proba(game_row_scaled)
+    #game_row_scaled = scaler.transform(game_row)
+    pred = model.predict(game_row)
+    prob = model.predict_proba(game_row)
 
     print(pred)
     print(prob)
