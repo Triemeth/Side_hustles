@@ -32,7 +32,6 @@ if __name__ == "__main__":
     lsu = lsu[lsu_team_cols]
 
     game_row = pd.concat([lsu.reset_index(drop=True), bama.reset_index(drop=True)], axis=1)
-    game_row.to_csv("../CFB_predictions_take_2/check_data/game_row_check.csv", index=False, encoding="utf-8")
 
     col_order = pd.read_csv(
         "../CFB_predictions_take_2/post_calc_data/model_feature_columns.csv",
@@ -42,6 +41,7 @@ if __name__ == "__main__":
     col_order = [c for c in col_order if not c.isdigit()]
 
     game_row = game_row.reindex(columns=col_order, fill_value=0)
+    game_row.to_csv("../CFB_predictions_take_2/check_data/game_row_check.csv", index=False, encoding="utf-8")
 
     #game_row_scaled = scaler.transform(game_row)
     pred = model.predict(game_row)
