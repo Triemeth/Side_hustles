@@ -1,0 +1,3 @@
+so i think the issue right now is the imbalance between columns for opp(70 ish) and non opp(40 ish) columns
+    my plan as of now is for each match opp data with the non opp data and combine that row into one row so both teams will have like 110 columns 
+    will end up dropping some columns and the extra rows
