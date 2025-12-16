@@ -139,8 +139,6 @@ def rolling_aggs(df, cols):
 
     return df
 
-#def double_cols(df):
-
 
 def bin_win_loss(df):   
     df["Win?"] = np.where(df["points"] > df["points_opp"], 1, 0)
