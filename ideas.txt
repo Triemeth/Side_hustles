@@ -2,3 +2,4 @@
     - needs to be much faster than the last one the last one took far to long to work
     - also may set up a CRON for it so it runs ever morning getting the pervios days stuff
     - this may even be useful for CFB prediction v2 with a sentiment score on the teams(who knows tho)
+		- look into the ffn python library 
