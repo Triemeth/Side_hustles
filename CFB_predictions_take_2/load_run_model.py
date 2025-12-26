@@ -10,13 +10,13 @@ if __name__ == "__main__":
     #df = df.drop(columns = "team_opp.1", axis = 0)
 
     team = df[
-        (df["team"] == "Alabama") &
+        (df["team"] == "LSU") &
         (df["week"] == 11) &
         (df["Year"] == 2025)
     ]
 
     opp = df[
-        (df["team_opp"] == "LSU") &
+        (df["team_opp"] == "Alabama") &
         (df["week"] == 11) &
         (df["Year"] == 2025)
     ]
@@ -45,8 +45,8 @@ if __name__ == "__main__":
 
     #print(game_row[opp_cols].head())
     #print(game_row[team_cols].head())
-    print(opp_cols)
-    print(team_cols)
+    #print(opp_cols)
+    #print(team_cols)
 
     game_row_scaled = scaler.transform(game_row)
     pred = model.predict(game_row_scaled)
