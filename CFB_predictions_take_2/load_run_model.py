@@ -7,7 +7,7 @@ if __name__ == "__main__":
     model = joblib.load("../CFB_predictions_take_2/saved_models/ensembleModel.pkl")
     scaler = joblib.load("../CFB_predictions_take_2/saved_models/scaler.pkl")
 
-    df = df.drop(columns = "team_opp.1", axis = 0)
+    #df = df.drop(columns = "team_opp.1", axis = 0)
 
     team = df[
         (df["team"] == "Alabama") &

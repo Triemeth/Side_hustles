@@ -42,6 +42,12 @@ def off_score(df):
                        "kickingPoints", "rushingAttempts", "sacks",
                        "turnovers", "totalPenaltiesYards", "elo_opp"]
     
+    offense_metrics_opp = ["totalYards_opp", "netPassingYards_opp", "passingTDs_opp",
+                       "rushingTDs_opp", "yardsPerPass_opp", "yardsPerRushAttempt_opp",
+                       "thirdDownEff_opp", "possessionTimeSeconds_opp", "points_opp",
+                       "kickingPoints_opp", "rushingAttempts_opp", "sacks_opp",
+                       "turnovers_opp", "totalPenaltiesYards_opp", "elo"]
+    
     #used chatgpt to generate these will probably need to mess with a lil
     offense_weights = [
         0.10,   # totalYards
@@ -63,32 +69,55 @@ def off_score(df):
 
 
     off_score = (
-        offense_weights[0]  * df["totalYards"] +
-        offense_weights[1]  * df["netPassingYards"] +
-        offense_weights[2]  * df["passingTDs"] +
-        offense_weights[3]  * df["rushingTDs"] +
-        offense_weights[4]  * df["yardsPerPass"] +
-        offense_weights[5]  * df["yardsPerRushAttempt"] +
-        offense_weights[6]  * df["thirdDownEff"] +
-        offense_weights[7]  * df["possessionTimeSeconds"] +
-        offense_weights[8]  * df["points"] +
-        offense_weights[9]  * df["kickingPoints"] +
-        offense_weights[10]  * df["rushingAttempts"] +
-        offense_weights[11]  * df["sacks"] +
-        offense_weights[12]  * df["turnovers"] +
-        offense_weights[13]  * df["totalPenaltiesYards"] +
-        offense_weights[14]  * df["elo_opp"]
+        offense_weights[0]  * df[offense_metrics[0]] +
+        offense_weights[1]  * df[offense_metrics[1]] +
+        offense_weights[2]  * df[offense_metrics[2]] +
+        offense_weights[3]  * df[offense_metrics[3]] +
+        offense_weights[4]  * df[offense_metrics[4]] +
+        offense_weights[5]  * df[offense_metrics[5]] +
+        offense_weights[6]  * df[offense_metrics[6]] +
+        offense_weights[7]  * df[offense_metrics[7]] +
+        offense_weights[8]  * df[offense_metrics[8]] +
+        offense_weights[9]  * df[offense_metrics[9]] +
+        offense_weights[10]  * df[offense_metrics[10]] +
+        offense_weights[11]  * df[offense_metrics[11]] +
+        offense_weights[12]  * df[offense_metrics[12]] +
+        offense_weights[13]  * df[offense_metrics[13]] +
+        offense_weights[14]  * df[offense_metrics[14]]
+    )
+
+    off_score_opp = (
+        offense_weights[0]  * df[offense_metrics_opp[0]] +
+        offense_weights[1]  * df[offense_metrics_opp[1]] +
+        offense_weights[2]  * df[offense_metrics_opp[2]] +
+        offense_weights[3]  * df[offense_metrics_opp[3]] +
+        offense_weights[4]  * df[offense_metrics_opp[4]] +
+        offense_weights[5]  * df[offense_metrics_opp[5]] +
+        offense_weights[6]  * df[offense_metrics_opp[6]] +
+        offense_weights[7]  * df[offense_metrics_opp[7]] +
+        offense_weights[8]  * df[offense_metrics_opp[8]] +
+        offense_weights[9]  * df[offense_metrics_opp[9]] +
+        offense_weights[10]  * df[offense_metrics_opp[10]] +
+        offense_weights[11]  * df[offense_metrics_opp[11]] +
+        offense_weights[12]  * df[offense_metrics_opp[12]] +
+        offense_weights[13]  * df[offense_metrics_opp[13]] +
+        offense_weights[14]  * df[offense_metrics_opp[14]]
     )
     
     df["off_score"] = off_score
+    df["off_score_opp"] = off_score_opp
 
-    return df["off_score"]
+    return df["off_score"], df["off_score_opp"]
 
 def def_score(df):
 
     defense_metrics = ["defensiveTDs", "interceptions", "interceptionYards",
                        "fumblesRecovered", "sacks", "tackles", "tacklesForLoss",
                        "passesDeflected", "qbHurries", "kickReturnTDs", "elo_opp"]
+    
+    defense_metrics_opp = ["defensiveTDs_opp", "interceptions_opp", "interceptionYards_opp",
+                       "fumblesRecovered_opp", "sacks_opp", "tackles_opp", "tacklesForLoss_opp",
+                       "passesDeflected_opp", "qbHurries_opp", "kickReturnTDs_opp", "elo"]
     
     #used chatgpt to generate these will probably need to mess with a lil
     defense_weights = [
@@ -106,22 +135,37 @@ def def_score(df):
     ]
     
     def_score = (
-        defense_weights[0]  * df["defensiveTDs"] +
-        defense_weights[1]  * df["interceptions"] +
-        defense_weights[2]  * df["interceptionYards"] +
-        defense_weights[3]  * df["fumblesRecovered"] +
-        defense_weights[4]  * df["sacks"] +
-        defense_weights[5]  * df["tackles"] +
-        defense_weights[6]  * df["tacklesForLoss"] +
-        defense_weights[7]  * df["passesDeflected"] +
-        defense_weights[8]  * df["qbHurries"] +
-        defense_weights[9]  * df["kickReturnTDs"] +
-        defense_weights[10]  * df["elo_opp"]
+        defense_weights[0]  * df[defense_metrics[0]] +
+        defense_weights[1]  * df[defense_metrics[1]] +
+        defense_weights[2]  * df[defense_metrics[2]] +
+        defense_weights[3]  * df[defense_metrics[3]] +
+        defense_weights[4]  * df[defense_metrics[4]] +
+        defense_weights[5]  * df[defense_metrics[5]] +
+        defense_weights[6]  * df[defense_metrics[6]] +
+        defense_weights[7]  * df[defense_metrics[7]] +
+        defense_weights[8]  * df[defense_metrics[8]] +
+        defense_weights[9]  * df[defense_metrics[9]] +
+        defense_weights[10]  * df[defense_metrics[10]]
+    )
+
+    def_score_opp = (
+        defense_weights[0]  * df[defense_metrics_opp[0]] +
+        defense_weights[1]  * df[defense_metrics_opp[1]] +
+        defense_weights[2]  * df[defense_metrics_opp[2]] +
+        defense_weights[3]  * df[defense_metrics_opp[3]] +
+        defense_weights[4]  * df[defense_metrics_opp[4]] +
+        defense_weights[5]  * df[defense_metrics_opp[5]] +
+        defense_weights[6]  * df[defense_metrics_opp[6]] +
+        defense_weights[7]  * df[defense_metrics_opp[7]] +
+        defense_weights[8]  * df[defense_metrics_opp[8]] +
+        defense_weights[9]  * df[defense_metrics_opp[9]] +
+        defense_weights[10]  * df[defense_metrics_opp[10]]
     )
 
     df["def_score"] = def_score
+    df["def_score_opp"] = def_score_opp
 
-    return df["def_score"]
+    return df["def_score"], df["def_score_opp"] 
 
 def rolling_aggs(df, cols):
     df = df.sort_values(["team", "date"]).reset_index(drop=True)
@@ -143,6 +187,7 @@ def rolling_aggs(df, cols):
 def bin_win_loss(df):   
     df["Win?"] = np.where(df["points"] > df["points_opp"], 1, 0)
     return df
+
 
 if __name__ == "__main__":
     curr_games_dat = pd.read_csv("../CFB_predictions_take_2/pre_calc_data/weekly_game_data.csv")
@@ -186,14 +231,23 @@ if __name__ == "__main__":
         combined_data.groupby("team")["points_opp"]
         .shift(1).transform(lambda x: x.rolling(window=3, min_periods=1).mean())
     )
+    
+    combined_data = combined_data.loc[:, ~combined_data.columns.duplicated()]
+
+    combined_data["points_scored_against_rolling_avg_opp"] = (
+        combined_data.groupby("team_opp")["points"]
+        .shift(1).transform(lambda x: x.rolling(window=3, min_periods=1).mean())
+    )
 
     #I am still not sure if this is the best spot for this
     #needed to be post self merge for elo_opp so going to have to do another rolling aggregation for off and def score going to throw elo in here too
-    combined_data["off_score"] = off_score(combined_data)
-    combined_data["def_score"] = def_score(combined_data)
+    combined_data["off_score"], combined_data["off_score_opp"] = off_score(combined_data)
+    combined_data["def_score"], combined_data["def_score_opp"]  = def_score(combined_data)
 
-    rolling_cols2 = ["off_score", "def_score", "elo"]
+    rolling_cols2 = ["off_score", "def_score", "elo", "off_score_opp", "def_score_opp", "elo_opp"]
     combined_data = rolling_aggs(combined_data, rolling_cols2)
+
+    combined_data = combined_data.rename(columns = {"off_score_opp_rolling_avg": "off_score_rolling_avg_opp", "def_score_opp_rolling_avg": "def_score_rolling_avg_opp", "elo_opp_rolling_avg": "elo_rolling_avg_opp"})
 
     combined_data = combined_data.dropna()
     point = combined_data["points"]
@@ -205,8 +259,21 @@ if __name__ == "__main__":
     more_cols_to_drop = ["date", "gameId", "conference",
                     "conference_opp", "elo", "elo_opp", "possessionTimeSeconds_opp", 
                     "points", "points_opp", "off_score", "def_score", "date_opp", 
-                    "homeAway_opp", "week_opp", "team_opp_opp"]
+                    "homeAway_opp", "week_opp", "team_opp_opp", 'completionAttempts_opp', 'defensiveTDs_opp',
+                    'firstDowns_opp', 'fourthDownEff_opp', 'fumblesLost_opp',
+                    'fumblesRecovered_opp', 'interceptionTDs_opp', 'interceptionYards_opp',
+                    'interceptions_opp', 'kickReturnTDs_opp', 'kickReturnYards_opp',
+                    'kickReturns_opp', 'kickingPoints_opp', 'netPassingYards_opp',
+                    'passesDeflected_opp', 'passesIntercepted_opp', 'passingTDs_opp',
+                    'puntReturnTDs_opp', 'puntReturnYards_opp', 'puntReturns_opp',
+                    'qbHurries_opp', 'rushingAttempts_opp', 'rushingTDs_opp',
+                    'rushingYards_opp', 'sacks_opp', 'tackles_opp', 'tacklesForLoss_opp',
+                    'thirdDownEff_opp', 'totalFumbles_opp', 'totalPenaltiesYards_opp',
+                    'totalYards_opp', 'turnovers_opp', 'yardsPerPass_opp',
+                    'yardsPerRushAttempt_opp', "off_score_opp", "def_score_opp"]
+    
     combined_data = combined_data.drop(columns = more_cols_to_drop, axis = 0)
+    combined_data["homeAway_opp"] = np.where(combined_data["homeAway"] == 1, 0, 1)
 
     combined_data.to_csv("../CFB_predictions_take_2/post_calc_data/combined_data.csv", index=False, encoding="utf-8")
 
